@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rescalectrl"
+version = "2.0.2"
+authors = [
+  { name="Christian Grovdal", email="christian.grovdal@arm.com" },
+  { name="Eivind Holsen", email="eivind.holsen@arm.com" },
+]
+description = " Rescale Control Helpers Package"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  'requests >= 2',
+]
+
+[project.scripts]
+rauthenticate = "rescalectrl.scripts.rauthenticate:argmain"
+
+[project.optional-dependencies]
+dev = [
+  'black',
+  'mock',
+  'flask',
+  'sphinx',
+  'sphinx_pyproject',
+  'sphinx_rtd_theme',
+  'selenium',
+  'beautifulsoup4',
+]
+
+[project.urls]
+"Homepage" = "TBD"
+"Bug Tracker" = "TBD"

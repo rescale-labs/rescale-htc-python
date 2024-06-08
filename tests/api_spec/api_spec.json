@@ -1,0 +1,915 @@
+[
+  {
+    "url": "/.well-known/jwks.json",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"keys\": [\n    {\n      \"use\": \"string\",\n      \"keyId\": \"string\",\n      \"algorithm\": \"string\",\n      \"keyOps\": [\n        \"string\"\n      ],\n      \"otherParameters\": {\n        \"additionalProp1\": \"string\",\n        \"additionalProp2\": \"string\",\n        \"additionalProp3\": \"string\"\n      },\n      \"key\": {\n        \"algorithm\": \"string\",\n        \"format\": \"string\",\n        \"encoded\": \"string\"\n      },\n      \"keyType\": \"string\",\n      \"publicKey\": {\n        \"algorithm\": \"string\",\n        \"format\": \"string\",\n        \"encoded\": \"string\"\n      }\n    }\n  ],\n  \"jsonWebKeys\": [\n    {\n      \"use\": \"string\",\n      \"keyId\": \"string\",\n      \"algorithm\": \"string\",\n      \"keyOps\": [\n        \"string\"\n      ],\n      \"otherParameters\": {\n        \"additionalProp1\": \"string\",\n        \"additionalProp2\": \"string\",\n        \"additionalProp3\": \"string\"\n      },\n      \"key\": {\n        \"algorithm\": \"string\",\n        \"format\": \"string\",\n        \"encoded\": \"string\"\n      },\n      \"keyType\": \"string\",\n      \"publicKey\": {\n        \"algorithm\": \"string\",\n        \"format\": \"string\",\n        \"encoded\": \"string\"\n      }\n    }\n  ]\n}"
+      },
+      {
+        "status": "401",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/auth/token",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"tokenValue\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\",\n  \"expiresIn\": 0\n}"
+      },
+      {
+        "status": "401",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/auth/token/whoami",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "\"string\""
+      },
+      {
+        "status": "401",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/auth/whoami",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"user\": {\n    \"userId\": \"qWoUF\",\n    \"email\": \"user1@rescale.com\",\n    \"fullName\": \"Juliet Doe\",\n    \"isRescaleAdmin\": true,\n    \"isOrganizationAdmin\": true,\n    \"isWorkspaceAdmin\": true,\n    \"isSuperuser\": true,\n    \"workspace\": {\n      \"id\": \"04-8473942\",\n      \"name\": \"Juliet's Workspace\"\n    },\n    \"organization\": {\n      \"code\": \"849506\",\n      \"canViewOrganizationJobs\": true\n    },\n    \"rescaleAdmin\": true,\n    \"organizationAdmin\": true,\n    \"workspaceAdmin\": true,\n    \"superuser\": true\n  },\n  \"userFeatures\": [\n    {\n      \"count\": 0,\n      \"results\": [\n        {\n          \"name\": \"string\",\n          \"value\": true\n        }\n      ]\n    }\n  ]\n}"
+      },
+      {
+        "status": "401",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/oauth2/token",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"string\",\n  \"expires_in\": 0\n}"
+      },
+      {
+        "status": "400",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/htc/gcp/clusters/{workspaceId}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"gcpProjectId\": \"string\",\n  \"jobStarter\": {\n    \"version\": \"string\",\n    \"qps\": 0,\n    \"burst\": 0\n  },\n  \"htcClusterServicesVersion\": \"string\",\n  \"htcClusterMonitoringVersion\": \"string\",\n  \"healthStatus\": \"string\",\n  \"syncStatus\": \"string\",\n  \"operationState\": {\n    \"phase\": \"string\",\n    \"message\": \"string\"\n  },\n  \"clusters\": [\n    {\n      \"name\": \"string\",\n      \"region\": \"AWS_AP_SOUTHEAST_1\",\n      \"version\": \"string\",\n      \"status\": \"string\",\n      \"nodePools\": [\n        {\n          \"name\": \"string\",\n          \"version\": \"string\",\n          \"instanceType\": \"string\",\n          \"status\": \"string\",\n          \"autoscaling\": {\n            \"enabled\": true,\n            \"minNodeCount\": 0,\n            \"maxNodeCount\": 0\n          }\n        }\n      ]\n    }\n  ]\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      },
+      {
+        "status": "404",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/htc/regions",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"name\": \"string\",\n  \"resourceId\": \"string\",\n  \"resourceStatus\": \"PASS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      },
+      {
+        "status": "404",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/htc/regions/{region}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"enabled\": true,\n  \"weight\": 4,\n  \"updatedBy\": \"qWoUF\",\n  \"updatedAt\": \"2022-03-10T16:15:50Z\",\n  \"supportedArchitectures\": [\n    \"AARCH64\"\n  ],\n  \"cloudProvider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      },
+      {
+        "status": "404",
+        "payload": "{\n  \"error\": \"string\",\n  \"errorDescription\": \"string\"\n}"
+      }
+    ]
+  },
+  {
+    "url": "/htc/metrics",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "string"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"projectId\": \"project-12345\",\n      \"projectName\": \"my-project\",\n      \"projectDescription\": \"my-first-project\",\n      \"createdBy\": \"qWoUF\",\n      \"workspaceId\": \"04-8473942\",\n      \"organizationCode\": \"my-org\",\n      \"createdAt\": \"2022-03-10T16:15:50Z\",\n      \"containerRegistry\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\",\n      \"repositories\": [\n        \"repo1\",\n        \"repo2\"\n      ],\n      \"regions\": [\n        \"AWS_US_EAST_2\",\n        \"AWS_US_WEST_2\"\n      ],\n      \"regionSettings\": [\n        {\n          \"computeSettings\": {\n            \"computeRegion\": \"AWS_AP_SOUTHEAST_1\"\n          },\n          \"storageSettings\": {\n            \"storageRegion\": \"AWS_AP_SOUTHEAST_1\"\n          }\n        }\n      ],\n      \"projectFolderPath\": \"projects/project-12345/\"\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"projectName\": \"my-project\",\n  \"projectDescription\": \"my-first-project\",\n  \"createdBy\": \"qWoUF\",\n  \"workspaceId\": \"04-8473942\",\n  \"organizationCode\": \"my-org\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"containerRegistry\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\",\n  \"repositories\": [\n    \"repo1\",\n    \"repo2\"\n  ],\n  \"regions\": [\n    \"AWS_US_EAST_2\",\n    \"AWS_US_WEST_2\"\n  ],\n  \"regionSettings\": [\n    {\n      \"computeSettings\": {\n        \"computeRegion\": \"AWS_AP_SOUTHEAST_1\"\n      },\n      \"storageSettings\": {\n        \"storageRegion\": \"AWS_AP_SOUTHEAST_1\"\n      }\n    }\n  ],\n  \"projectFolderPath\": \"projects/project-12345/\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"projectName\": \"my-project\",\n  \"projectDescription\": \"my-first-project\",\n  \"createdBy\": \"qWoUF\",\n  \"workspaceId\": \"04-8473942\",\n  \"organizationCode\": \"my-org\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"containerRegistry\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\",\n  \"repositories\": [\n    \"repo1\",\n    \"repo2\"\n  ],\n  \"regions\": [\n    \"AWS_US_EAST_2\",\n    \"AWS_US_WEST_2\"\n  ],\n  \"regionSettings\": [\n    {\n      \"computeSettings\": {\n        \"computeRegion\": \"AWS_AP_SOUTHEAST_1\"\n      },\n      \"storageSettings\": {\n        \"storageRegion\": \"AWS_AP_SOUTHEAST_1\"\n      }\n    }\n  ],\n  \"projectFolderPath\": \"projects/project-12345/\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}",
+    "method": "PATCH",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"projectName\": \"my-project\",\n  \"projectDescription\": \"my-first-project\",\n  \"createdBy\": \"qWoUF\",\n  \"workspaceId\": \"04-8473942\",\n  \"organizationCode\": \"my-org\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"containerRegistry\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\",\n  \"repositories\": [\n    \"repo1\",\n    \"repo2\"\n  ],\n  \"regions\": [\n    \"AWS_US_EAST_2\",\n    \"AWS_US_WEST_2\"\n  ],\n  \"regionSettings\": [\n    {\n      \"computeSettings\": {\n        \"computeRegion\": \"AWS_AP_SOUTHEAST_1\"\n      },\n      \"storageSettings\": {\n        \"storageRegion\": \"AWS_AP_SOUTHEAST_1\"\n      }\n    }\n  ],\n  \"projectFolderPath\": \"projects/project-12345/\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/dimensions",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  {\n    \"derived\": {\n      \"architecture\": \"AARCH64\",\n      \"vCPUs\": 0,\n      \"memory\": 0\n    },\n    \"machineType\": \"t2d-standard-16\",\n    \"priority\": \"ON_DEMAND_PRIORITY\",\n    \"region\": \"AWS_AP_SOUTHEAST_1\",\n    \"computeScalingPolicy\": \"PROFILE_UNSPECIFIED\",\n    \"hyperthreading\": true\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/dimensions",
+    "method": "PUT",
+    "responses": [
+      {
+        "status": "201",
+        "payload": "[\n  {\n    \"derived\": {\n      \"architecture\": \"AARCH64\",\n      \"vCPUs\": 0,\n      \"memory\": 0\n    },\n    \"machineType\": \"t2d-standard-16\",\n    \"priority\": \"ON_DEMAND_PRIORITY\",\n    \"region\": \"AWS_AP_SOUTHEAST_1\",\n    \"computeScalingPolicy\": \"PROFILE_UNSPECIFIED\",\n    \"hyperthreading\": true\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  {\n    \"createdBy\": \"qWoUF\",\n    \"vCPUs\": 999999,\n    \"updatedBy\": \"qWoUF\",\n    \"updatedAt\": \"\",\n    \"createdAt\": \"\",\n    \"workspaceId\": \"04-8473942\",\n    \"id\": 1,\n    \"projectId\": \"project-12345\",\n    \"modifierRole\": \"PROJECT_ADMIN\"\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "201",
+        "payload": "{\n  \"createdBy\": \"qWoUF\",\n  \"vCPUs\": 999999,\n  \"updatedBy\": \"qWoUF\",\n  \"updatedAt\": \"\",\n  \"createdAt\": \"\",\n  \"workspaceId\": \"04-8473942\",\n  \"id\": 1,\n  \"projectId\": \"project-12345\",\n  \"modifierRole\": \"PROJECT_ADMIN\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits",
+    "method": "DELETE",
+    "responses": [
+      {
+        "status": "204"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits/{id}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"createdBy\": \"qWoUF\",\n  \"vCPUs\": 999999,\n  \"updatedBy\": \"qWoUF\",\n  \"updatedAt\": \"\",\n  \"createdAt\": \"\",\n  \"workspaceId\": \"04-8473942\",\n  \"id\": 1,\n  \"projectId\": \"project-12345\",\n  \"modifierRole\": \"PROJECT_ADMIN\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits/{id}",
+    "method": "DELETE",
+    "responses": [
+      {
+        "status": "204"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/limits/{id}",
+    "method": "PATCH",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"createdBy\": \"qWoUF\",\n  \"vCPUs\": 999999,\n  \"updatedBy\": \"qWoUF\",\n  \"updatedAt\": \"\",\n  \"createdAt\": \"\",\n  \"workspaceId\": \"04-8473942\",\n  \"id\": 1,\n  \"projectId\": \"project-12345\",\n  \"modifierRole\": \"PROJECT_ADMIN\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/storage/presigned-url",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"url\": \"https://presigned-put-url/my-storage\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"expiration\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/storage/token",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n  \"projectId\": \"project-12345\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"user\": \"123456789:qWoUF\",\n  \"expiration\": \"2022-03-10T16:15:50Z\",\n  \"credentials\": {\n    \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n    \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n    \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n  },\n  \"provider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/storage/token/{region}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n  \"projectId\": \"project-12345\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"user\": \"123456789:qWoUF\",\n  \"expiration\": \"2022-03-10T16:15:50Z\",\n  \"credentials\": {\n    \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n    \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n    \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n  },\n  \"provider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/storage/tokens",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"defaultRegion\": \"AWS_AP_SOUTHEAST_1\",\n  \"regionStores\": [\n    {\n      \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n      \"projectId\": \"project-12345\",\n      \"storageName\": \"my-storage\",\n      \"region\": \"AWS_AP_SOUTHEAST_1\",\n      \"user\": \"123456789:qWoUF\",\n      \"expiration\": \"2022-03-10T16:15:50Z\",\n      \"credentials\": {\n        \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n        \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n        \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n      },\n      \"provider\": \"AWS\"\n    }\n  ]\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/task-retention-policy",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"deleteAfter\": 24,\n  \"archiveAfter\": 168,\n  \"createdAt\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/task-retention-policy",
+    "method": "PUT",
+    "responses": [
+      {
+        "status": "201",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"deleteAfter\": 24,\n  \"archiveAfter\": 168,\n  \"createdAt\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/task-retention-policy",
+    "method": "DELETE",
+    "responses": [
+      {
+        "status": "204"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/container-registry/images",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"containerRegistry\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\",\n  \"images\": [\n    \"repo1:latest\",\n    \"repo1:v2\",\n    \"repo2:latest\"\n  ]\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/container-registry/images/{imageName}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"status\": \"READY\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/container-registry/repo/{repoName}",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"repositoryName\": \"repo1\",\n  \"successfullyCreated\": true,\n  \"projectId\": \"project-12345\",\n  \"createdBy\": \"qWoUF\",\n  \"workspaceId\": \"04-8473942\",\n  \"registryURI\": \"123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/container-registry/token",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "registry-token-12345"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"projectId\": \"project-12345\",\n      \"taskId\": \"task-12345\",\n      \"taskName\": \"my-task\",\n      \"taskDescription\": \"my sample task\",\n      \"createdBy\": \"qWoUF\",\n      \"createdAt\": \"2022-03-10T16:15:50Z\",\n      \"lastActiveAt\": \"2022-03-10T16:15:50Z\",\n      \"archivedAt\": \"2022-03-10T16:15:50Z\",\n      \"deletedAt\": \"2022-03-10T16:15:50Z\",\n      \"workspaceId\": \"04-8473942\",\n      \"taskFolderPath\": \"projects/project-12345/tasks/task-12345\",\n      \"lifecycleStatus\": \"ACTIVE\"\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"taskId\": \"task-12345\",\n  \"taskName\": \"my-task\",\n  \"taskDescription\": \"my sample task\",\n  \"createdBy\": \"qWoUF\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"lastActiveAt\": \"2022-03-10T16:15:50Z\",\n  \"archivedAt\": \"2022-03-10T16:15:50Z\",\n  \"deletedAt\": \"2022-03-10T16:15:50Z\",\n  \"workspaceId\": \"04-8473942\",\n  \"taskFolderPath\": \"projects/project-12345/tasks/task-12345\",\n  \"lifecycleStatus\": \"ACTIVE\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"taskId\": \"task-12345\",\n  \"taskName\": \"my-task\",\n  \"taskDescription\": \"my sample task\",\n  \"createdBy\": \"qWoUF\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"lastActiveAt\": \"2022-03-10T16:15:50Z\",\n  \"archivedAt\": \"2022-03-10T16:15:50Z\",\n  \"deletedAt\": \"2022-03-10T16:15:50Z\",\n  \"workspaceId\": \"04-8473942\",\n  \"taskFolderPath\": \"projects/project-12345/tasks/task-12345\",\n  \"lifecycleStatus\": \"ACTIVE\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}",
+    "method": "DELETE",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"taskId\": \"task-12345\",\n  \"taskName\": \"my-task\",\n  \"taskDescription\": \"my sample task\",\n  \"createdBy\": \"qWoUF\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"lastActiveAt\": \"2022-03-10T16:15:50Z\",\n  \"archivedAt\": \"2022-03-10T16:15:50Z\",\n  \"deletedAt\": \"2022-03-10T16:15:50Z\",\n  \"workspaceId\": \"04-8473942\",\n  \"taskFolderPath\": \"projects/project-12345/tasks/task-12345\",\n  \"lifecycleStatus\": \"DELETED\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}",
+    "method": "PATCH",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectId\": \"project-12345\",\n  \"taskId\": \"task-12345\",\n  \"taskName\": \"my-task\",\n  \"taskDescription\": \"my sample task\",\n  \"createdBy\": \"qWoUF\",\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"lastActiveAt\": \"2022-03-10T16:15:50Z\",\n  \"archivedAt\": \"2022-03-10T16:15:50Z\",\n  \"deletedAt\": \"2022-03-10T16:15:50Z\",\n  \"workspaceId\": \"04-8473942\",\n  \"taskFolderPath\": \"projects/project-12345/tasks/task-12345\",\n  \"lifecycleStatus\": \"ACTIVE\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/group-summary-statistics",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"group\": \"my-job-group\",\n      \"jobStatuses\": {\n        \"SUBMITTED_TO_RESCALE\": 5,\n        \"SUBMITTED_TO_PROVIDER\": 5,\n        \"RUNNABLE\": 5,\n        \"STARTING\": 5,\n        \"RUNNING\": 5,\n        \"SUCCEEDED\": 5,\n        \"FAILED\": 5\n      }\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/groups",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  \"group1\",\n  \"group2\"\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/storage/presigned-url",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"url\": \"https://presigned-put-url/my-storage\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"expiration\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/storage/regional-storage",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"rescaleRegion\": \"AWS_AP_SOUTHEAST_1\",\n  \"regionalStores\": [\n    {\n      \"region\": \"AWS_AP_SOUTHEAST_1\",\n      \"projectPath\": \"string\",\n      \"taskPath\": \"string\",\n      \"credentials\": {\n        \"additionalProp1\": \"string\",\n        \"additionalProp2\": \"string\",\n        \"additionalProp3\": \"string\"\n      },\n      \"provider\": \"AWS\"\n    }\n  ]\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/storage/token",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n  \"projectId\": \"project-12345\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"user\": \"123456789:qWoUF\",\n  \"expiration\": \"2022-03-10T16:15:50Z\",\n  \"credentials\": {\n    \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n    \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n    \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n  },\n  \"provider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/storage/token/{region}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n  \"projectId\": \"project-12345\",\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"user\": \"123456789:qWoUF\",\n  \"expiration\": \"2022-03-10T16:15:50Z\",\n  \"credentials\": {\n    \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n    \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n    \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n  },\n  \"provider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/storage/tokens",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"defaultRegion\": \"AWS_AP_SOUTHEAST_1\",\n  \"regionStores\": [\n    {\n      \"projectSharedStoragePath\": \"s3://my-storage/projects/project-12345/shared/\",\n      \"projectId\": \"project-12345\",\n      \"storageName\": \"my-storage\",\n      \"region\": \"AWS_AP_SOUTHEAST_1\",\n      \"user\": \"123456789:qWoUF\",\n      \"expiration\": \"2022-03-10T16:15:50Z\",\n      \"credentials\": {\n        \"AWS_ACCESS_KEY_ID\": \"key-12345\",\n        \"AWS_SECRET_ACCESS_KEY\": \"secret-key-12345789\",\n        \"AWS_SESSION_TOKEN\": \"token-12345////12345\"\n      },\n      \"provider\": \"AWS\"\n    }\n  ]\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/summary-statistics",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"group\": \"my-job-group\",\n  \"jobStatuses\": {\n    \"SUBMITTED_TO_RESCALE\": 5,\n    \"SUBMITTED_TO_PROVIDER\": 5,\n    \"RUNNABLE\": 5,\n    \"STARTING\": 5,\n    \"RUNNING\": 5,\n    \"SUCCEEDED\": 5,\n    \"FAILED\": 5\n  }\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"jobUUID\": \"155f18d4\",\n      \"providerJobId\": \"provider-id-12345\",\n      \"region\": \"AWS_AP_SOUTHEAST_1\",\n      \"taskId\": \"task-12345\",\n      \"projectId\": \"project-12345\",\n      \"status\": \"SUBMITTED_TO_RESCALE\",\n      \"statusReason\": \"Completed\",\n      \"container\": {\n        \"exitCode\": 3,\n        \"reason\": \"Container Exited\"\n      },\n      \"createdAt\": \"2022-03-10T16:15:50Z\",\n      \"createdBy\": \"qWoUF\",\n      \"failureCode\": \"ErrorTimeout\",\n      \"workspaceId\": \"04-8098234\",\n      \"group\": \"sample-group\",\n      \"commands\": [\n        \"python\",\n        \"script.py\"\n      ],\n      \"envs\": [\n        {\n          \"name\": \"FOO\",\n          \"value\": \"bar\"\n        }\n      ],\n      \"jobExecutionEnvironment\": {\n        \"instanceId\": \"123456789\",\n        \"instanceType\": \"c7g.medium\",\n        \"architecture\": 2\n      },\n      \"tags\": [\n        {\n          \"key\": \"HOME\",\n          \"value\": \"/home/users/\"\n        }\n      ],\n      \"architecture\": \"AARCH64\",\n      \"maxVCpus\": 0,\n      \"maxMemory\": 0,\n      \"maxDiskGiB\": 0,\n      \"maxSwap\": 0,\n      \"imageName\": \"string\",\n      \"execTimeoutSeconds\": 0,\n      \"updatedAt\": \"2022-03-10T16:15:50Z\",\n      \"instanceId\": \"string\",\n      \"instanceLabels\": {\n        \"csp\": \"string\",\n        \"priority\": \"string\",\n        \"instanceType\": \"string\",\n        \"instanceArchitecture\": \"string\",\n        \"accountId\": \"string\",\n        \"region\": \"string\"\n      },\n      \"startedAt\": \"2022-03-10T16:15:50Z\",\n      \"completedAt\": \"2022-03-10T16:15:50Z\"\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs/batch",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  {\n    \"jobName\": \"Sample job\",\n    \"taskId\": \"task-12345\",\n    \"projectId\": \"project-12345\",\n    \"parentJobId\": \"job-12345\",\n    \"createdBy\": \"qWoUF\",\n    \"workspaceId\": \"04-8234074\",\n    \"group\": \"sample-group\",\n    \"batchSize\": 10,\n    \"regions\": [\n      \"AWS_AP_SOUTHEAST_1\"\n    ],\n    \"rescaleTimeReceived\": \"2022-03-10T16:15:50Z\",\n    \"htcJobDefinition\": {\n      \"imageName\": \"my-image\",\n      \"maxVCpus\": 8,\n      \"maxMemory\": 128,\n      \"maxDiskGiB\": 1,\n      \"maxSwap\": 0,\n      \"tags\": {\n        \"HOME\": \"foo_bar\"\n      },\n      \"commands\": [\n        \"python\",\n        \"script.py\"\n      ],\n      \"envs\": [\n        {\n          \"name\": \"FOO\",\n          \"value\": \"bar\"\n        }\n      ],\n      \"claims\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"execTimeoutSeconds\": 300,\n      \"architecture\": \"AARCH64\",\n      \"priority\": \"ON_DEMAND_PRIORITY\"\n    },\n    \"tags\": [\n      {\n        \"key\": \"HOME\",\n        \"value\": \"/home/users/\"\n      }\n    ],\n    \"retryStrategy\": {\n      \"maxRetries\": 10\n    },\n    \"jobDefinitionName\": \"job-definition-321\",\n    \"cloudProvider\": \"AWS\"\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs/cancel",
+    "method": "POST",
+    "responses": [
+      {
+        "status": "200"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs/{jobId}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"jobUUID\": \"155f18d4\",\n  \"providerJobId\": \"provider-id-12345\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"taskId\": \"task-12345\",\n  \"projectId\": \"project-12345\",\n  \"status\": \"SUBMITTED_TO_RESCALE\",\n  \"statusReason\": \"Completed\",\n  \"container\": {\n    \"exitCode\": 3,\n    \"reason\": \"Container Exited\"\n  },\n  \"createdAt\": \"2022-03-10T16:15:50Z\",\n  \"createdBy\": \"qWoUF\",\n  \"failureCode\": \"ErrorTimeout\",\n  \"workspaceId\": \"04-8098234\",\n  \"group\": \"sample-group\",\n  \"commands\": [\n    \"python\",\n    \"script.py\"\n  ],\n  \"envs\": [\n    {\n      \"name\": \"FOO\",\n      \"value\": \"bar\"\n    }\n  ],\n  \"jobExecutionEnvironment\": {\n    \"instanceId\": \"123456789\",\n    \"instanceType\": \"c7g.medium\",\n    \"architecture\": 2\n  },\n  \"tags\": [\n    {\n      \"key\": \"HOME\",\n      \"value\": \"/home/users/\"\n    }\n  ],\n  \"architecture\": \"AARCH64\",\n  \"maxVCpus\": 0,\n  \"maxMemory\": 0,\n  \"maxDiskGiB\": 0,\n  \"maxSwap\": 0,\n  \"imageName\": \"string\",\n  \"execTimeoutSeconds\": 0,\n  \"updatedAt\": \"2022-03-10T16:15:50Z\",\n  \"instanceId\": \"string\",\n  \"instanceLabels\": {\n    \"csp\": \"string\",\n    \"priority\": \"string\",\n    \"instanceType\": \"string\",\n    \"instanceArchitecture\": \"string\",\n    \"accountId\": \"string\",\n    \"region\": \"string\"\n  },\n  \"startedAt\": \"2022-03-10T16:15:50Z\",\n  \"completedAt\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs/{jobId}/events",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"eventId\": \"event-13\",\n      \"jobId\": \"job-12345\",\n      \"dateTime\": \"2022-03-10T16:15:50Z\",\n      \"statusReason\": \"Completed\",\n      \"container\": {\n        \"exitCode\": 3,\n        \"reason\": \"Container Exited\"\n      },\n      \"status\": \"SUBMITTED_TO_RESCALE\",\n      \"instanceLabels\": {\n        \"csp\": \"string\",\n        \"priority\": \"string\",\n        \"instanceType\": \"string\",\n        \"instanceArchitecture\": \"string\",\n        \"accountId\": \"string\",\n        \"region\": \"string\"\n      },\n      \"instanceId\": \"string\",\n      \"userCancelledEvent\": true\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/projects/{projectId}/tasks/{taskId}/jobs/{jobId}/logs",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"items\": [\n    {\n      \"timestamp\": \"2022-03-10T16:15:50Z\",\n      \"message\": \"JOB COMPLETED SUCCESSFULLY\"\n    }\n  ],\n  \"next\": \"https://page2.com\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/storage",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  {\n    \"storageName\": \"my-storage\",\n    \"region\": \"AWS_AP_SOUTHEAST_1\",\n    \"provider\": \"AWS\"\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/storage/region/{region}",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"storageName\": \"my-storage\",\n  \"region\": \"AWS_AP_SOUTHEAST_1\",\n  \"provider\": \"AWS\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/workspaces/{workspaceId}/dimensions",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "[\n  {\n    \"derived\": {\n      \"architecture\": \"AARCH64\",\n      \"vCPUs\": 0,\n      \"memory\": 0\n    },\n    \"machineType\": \"t2d-standard-16\",\n    \"priority\": \"ON_DEMAND_PRIORITY\",\n    \"region\": \"AWS_AP_SOUTHEAST_1\",\n    \"computeScalingPolicy\": \"PROFILE_UNSPECIFIED\",\n    \"hyperthreading\": true\n  }\n]"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/workspaces/{workspaceId}/limits",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"createdBy\": \"qWoUF\",\n  \"vCPUs\": 999999,\n  \"updatedBy\": \"qWoUF\",\n  \"updatedAt\": \"\",\n  \"createdAt\": \"\",\n  \"workspaceId\": \"04-8473942\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/workspaces/{workspaceId}/task-retention-policy",
+    "method": "GET",
+    "responses": [
+      {
+        "status": "200",
+        "payload": "{\n  \"workspaceId\": \"workspace-12345\",\n  \"deleteAfter\": 24,\n  \"archiveAfter\": 168,\n  \"createdAt\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  },
+  {
+    "url": "/htc/workspaces/{workspaceId}/task-retention-policy",
+    "method": "PUT",
+    "responses": [
+      {
+        "status": "201",
+        "payload": "{\n  \"workspaceId\": \"workspace-12345\",\n  \"deleteAfter\": 24,\n  \"archiveAfter\": 168,\n  \"createdAt\": \"2022-03-10T16:15:50Z\"\n}"
+      },
+      {
+        "status": "401"
+      },
+      {
+        "status": "403"
+      }
+    ]
+  }
+]
