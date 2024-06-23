@@ -4,7 +4,7 @@ from __future__ import annotations
 import threading
 import re
 from ..internals.constants import MAX_CONCURRENT_API_CONNECTIONS, REQUESTS_TIMEOUTS
-from ..exceptions import RescaleException
+from ..exceptions import HtcException
 from ..logger import logger
 
 connections_semaphore = threading.Semaphore(value=MAX_CONCURRENT_API_CONNECTIONS)
@@ -14,7 +14,7 @@ connections_semaphore = threading.Semaphore(value=MAX_CONCURRENT_API_CONNECTIONS
 # On errors, also print the returned text before raising exception
 def format_api_result(res, return_json, endpoint):
     if res.status_code >= 400:
-        raise RescaleException(
+        raise HtcException(
             f"{res.request.method} {endpoint} | Req body: {res.request.body} | Response: HTTP {res.status_code}: {res.text}",
             res.status_code,
         )
@@ -53,7 +53,7 @@ def api_get(rescale, endpoint, params={}, max_items=None, custom_auth_header=Non
 
         # Handle errors
         if last_res.status_code >= 400:
-            raise RescaleException(
+            raise HtcException(
                 f"{last_res.request.method} {endpoint} | Req body: {last_res.request.body} | Response: HTTP {last_res.status_code}: {last_res.text}",
                 last_res.status_code,
             )
@@ -77,14 +77,14 @@ def api_get(rescale, endpoint, params={}, max_items=None, custom_auth_header=Non
                 if r:
                     current_base_url = r.group(0)
                 else:
-                    raise RescaleException(
+                    raise HtcException(
                         f"Base of URL {endpoint} doesn't look like an URL"
                     )
                 r = base_url_re.match(endpoint)
                 if r:
                     next_base_url = base_url_re.search(last_res_json["next"]).group(0)
                 else:
-                    raise RescaleException(
+                    raise HtcException(
                         f"Base of URL {endpoint} doesn't look like an URL"
                     )
                 if current_base_url != next_base_url:

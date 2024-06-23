@@ -1,5 +1,5 @@
-Rescale Projects
-=========================
+HTC Projects
+============
 
-.. automodule:: rescalectrl.rprojects
+.. automodule:: rescalehtc.htcprojects
    :members:

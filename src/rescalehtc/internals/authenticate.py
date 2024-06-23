@@ -7,7 +7,7 @@ import random
 import threading
 
 from ..internals.constants import REQUESTS_TIMEOUTS
-from ..exceptions import RescaleException
+from ..exceptions import HtcException
 from ..logger import logger
 
 # Functions which returns a Bearer token, wrapped in a dict
@@ -42,7 +42,7 @@ def get_bearer_json(
                 + "using the Rescale HTC API. Run the 'rauthenticate' utility first."
             )
             logger.error(msg)
-            raise RescaleException(msg)
+            raise HtcException(msg)
 
         logger.debug(f"Read API token from file {token_file}")
         logger.debug(f"Using authenticating against base URL {rescale_api_base_url}")
@@ -102,7 +102,7 @@ def get_bearer_json(
             {bearer_token_res.text}
             "HTTP {bearer_token_res.status_code}"""
             logger.error(msg)
-            raise RescaleException(msg)
+            raise HtcException(msg)
 
         bearer_json = bearer_token_res.json()
 

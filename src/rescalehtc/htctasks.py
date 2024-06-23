@@ -1,27 +1,27 @@
 """
 This module has functions that help with Rescale Tasks.
-Tasks are returned as a RescaleTask object, which can
+Tasks are returned as a HtcTask object, which can
 be used for later library calls.
 """
 from __future__ import annotations
 from datetime import timedelta, datetime
 from .internals.constants import FLOOD_PREVENTION_INTERVAL_SECONDS
-from .exceptions import RescaleException
-from .rprojects import RescaleProject
-from . import RescaleSession, api
+from .exceptions import HtcException
+from .htcprojects import HtcProject
+from . import HtcSession, api
 from .logger import logger
 
 
-class RescaleTask:
+class HtcTask:
     """
     Class which represents a single Rescale Task. Use the functions in
-    rescalectrl.tasks to create this object.
+    rescalehtc.tasks to create this object.
     """
 
-    def __init__(self, json: dict, project: RescaleProject):
-        if not isinstance(project, RescaleProject):
-            raise RescaleException(
-                "Provided project argument is not a RescaleProject object."
+    def __init__(self, json: dict, project: HtcProject):
+        if not isinstance(project, HtcProject):
+            raise HtcException(
+                "Provided project argument is not a HtcProject object."
             )
         self.json = json
         """The raw dictionary describing this Task. The dictionary follows the
@@ -50,11 +50,11 @@ class RescaleTask:
         self.task_summary = None
 
     def __repr__(self):
-        return "RescaleTask(" + str(self.json) + ")"
+        return "HtcTask(" + str(self.json) + ")"
 
-    def get_task_summary(self, rescale: RescaleSession) -> dict:
+    def get_task_summary(self, rescale: HtcSession) -> dict:
         """
-        Returns the task summary for this RescaleJobBatch's task.
+        Returns the task summary for this HtcJobBatch's task.
         This contains summary of how many jobs are running, succeeded,
         failed etc within this task. Example return value:
 
@@ -107,12 +107,12 @@ class RescaleTask:
 
         return self.task_summary
 
-    def is_still_running(self, rescale: RescaleSession) -> bool:
+    def is_still_running(self, rescale: HtcSession) -> bool:
         """
         Returns false if all jobs within this task are in the SUCCEEDED or FAILED states,
         otherwise return true as one or more jobs are still running/pending.
         Equivalent to the "still_running" field in
-        :func:`rescalectrl.rtasks.RescaleTask.get_task_summary`.
+        :func:`rescalehtc.htctasks.HtcTask.get_task_summary`.
 
         Use this function in a loop with 30 second intervals to wait for job completion.
 
@@ -129,13 +129,13 @@ class RescaleTask:
         """
         return self.get_task_summary(rescale)["still_running"]
 
-    def delete_task(self, rescale: RescaleSession):
+    def delete_task(self, rescale: HtcSession):
         """
         Delete this task.
         """
         delete_task_with_id(rescale, self.project, self.json["taskId"])
 
-    def cancel_jobs_in_task(self, rescale: RescaleSession):
+    def cancel_jobs_in_task(self, rescale: HtcSession):
         """
         Cancels all the jobs within this task. Tasks that have not yet started
         will not start, and running tasks will be stopped.
@@ -146,28 +146,28 @@ class RescaleTask:
 
 
 def get_tasks_with_name(
-    rescale: RescaleSession,
-    project: RescaleProject,
+    rescale: HtcSession,
+    project: HtcProject,
     task_name: str,
     lifecycle_status: str = "ACTIVE",
-) -> list[RescaleTask]:
+) -> list[HtcTask]:
     """
     Get a list of tasks that match a certain name, within a given project and matching
     a given lifecycle_status. To find tasks in any lifecycle_status task, set lifecycle_status to
-    ``any``. Returns a list of RescaleTask objects.
+    ``any``. Returns a list of HtcTask objects.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     any_lifecycle_status = True if lifecycle_status in ["any", "all", None] else False
 
     all_tasks = api.get_htc_projects_tasks(rescale, project_id)
     name_matching_tasks = [
-        RescaleTask(task_json, project)
+        HtcTask(task_json, project)
         for task_json in all_tasks
         if task_json["taskName"] == task_name
         and (any_lifecycle_status or task_json["lifecycleStatus"] == lifecycle_status)
@@ -176,49 +176,49 @@ def get_tasks_with_name(
 
 
 def get_task_with_id(
-    rescale: RescaleSession, project: RescaleProject, task_id: str
-) -> RescaleTask:
+    rescale: HtcSession, project: HtcProject, task_id: str
+) -> HtcTask:
     """
     Get a task with a certain taskId, within a given project.
 
     If the taskId is not found, returns None.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     try:
         task = api.get_htc_projects_tasks(rescale, project_id, task_id)
-    except RescaleException as e:
+    except HtcException as e:
         # A 404 exception means a task with this id was not found
         return None
 
-    return RescaleTask(task, project)
+    return HtcTask(task, project)
 
 
 def get_tasks(
-    rescale: RescaleSession, project: RescaleProject, lifecycle_status: str = "ACTIVE"
-) -> list[RescaleTask]:
+    rescale: HtcSession, project: HtcProject, lifecycle_status: str = "ACTIVE"
+) -> list[HtcTask]:
     """
     Get all tasks within a given project that matches a given lifecycle_status.
     To find tasks in any lifecycle_status task, set lifecycle_status to
-    ``any``. Returns a list of RescaleTask objects.
+    ``any``. Returns a list of HtcTask objects.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     any_lifecycle_status = True if lifecycle_status in ["any", "all", None] else False
 
     all_tasks = api.get_htc_projects_tasks(rescale, project_id)
     name_matching_tasks = [
-        RescaleTask(task_json, project)
+        HtcTask(task_json, project)
         for task_json in all_tasks
         if (any_lifecycle_status or task_json["lifecycleStatus"] == lifecycle_status)
     ]
@@ -226,40 +226,40 @@ def get_tasks(
 
 
 def create_task_with_name(
-    rescale: RescaleSession, project: RescaleProject, task_name, task_description=""
-) -> RescaleTask:
+    rescale: HtcSession, project: HtcProject, task_name, task_description=""
+) -> HtcTask:
     """
     Create a Rescale task with a specific task name, and an optional task description.
 
-    Returns a RescaleTask object.
+    Returns a HtcTask object.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     task_definition = {"taskName": task_name, "taskDescription": task_description}
-    return RescaleTask(
+    return HtcTask(
         api.post_htc_projects_tasks(rescale, project_id, payload=task_definition),
         project,
     )
 
 
 def delete_tasks_with_name(
-    rescale: RescaleSession, project: RescaleProject, task_name: str
+    rescale: HtcSession, project: HtcProject, task_name: str
 ) -> list[dict]:
     """
     Delete all tasks that match a specific task name. This may delete multiple
     tasks. Returns a list of json descriptions of the tasks that were deleted, or
     an empty list if no tasks where affected.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
     all_tasks = get_tasks(rescale, project, lifecycle_status="ACTIVE")
     logger.debug(
@@ -284,7 +284,7 @@ def delete_tasks_with_name(
 
 
 def delete_task_with_id(
-    rescale: RescaleSession, project: RescaleProject, task_id: str
+    rescale: HtcSession, project: HtcProject, task_id: str
 ) -> dict:
     """
     Delete a task matching a given ID within the provided project. The json describing
@@ -292,16 +292,16 @@ def delete_task_with_id(
 
     None is returned if the taskId does not exist.
     """
-    if isinstance(project, RescaleProject):
+    if isinstance(project, HtcProject):
         project_id = project.json["projectId"]
     else:
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     try:
         return api.delete_htc_projects_tasks(rescale, project_id, task_id)
-    except RescaleException as e:
+    except HtcException as e:
         if e.status_code == 404:
             # A 404 exception means a task with this id was not found
             return None

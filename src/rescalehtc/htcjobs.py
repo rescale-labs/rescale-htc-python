@@ -1,7 +1,7 @@
 """
 This module deals with Rescale Jobs and Batch Jobs, which
 are where actual compute is performed in Rescale.
-Jobs are returned as a RescaleJob or RescaleJobBatch objects.
+Jobs are returned as a HtcJob or HtcJobBatch objects.
 """
 from __future__ import annotations
 from datetime import datetime, timedelta
@@ -15,19 +15,19 @@ from .internals.constants import (
     FLOOD_PREVENTION_INTERVAL_SECONDS,
     MAX_WAIT_FOR_IMAGE_TRANSITION_PENDING_READY_SECONDS,
 )
-from .exceptions import RescaleException
-from .rtasks import RescaleTask
-from . import RescaleSession, api
+from .exceptions import HtcException
+from .htctasks import HtcTask
+from . import HtcSession, api
 
-logger = logging.getLogger("RESCALECTRL")
+logger = logging.getLogger("RESCALEHTC")
 
 
-class RescaleJob:
+class HtcJob:
     """
     Class for a single Rescale Job.
     """
 
-    def __init__(self, json: dict, task: RescaleTask):
+    def __init__(self, json: dict, task: HtcTask):
         now = datetime.now()
         self.json = json
         """The raw dictionary describing this Job. The dictionary follows the
@@ -95,10 +95,10 @@ class RescaleJob:
 
         Access this member variable to extract information about a job.
 
-        If this RescaleJob object was created from a :func:`rescalectrl.rjobs.RescaleJobBatch.to_jobs`
+        If this HtcJob object was created from a :func:`rescalehtc.htcjobs.HtcJobBatch.to_jobs`
         (which is common), then not all fields in the schema may be available. Only fields
         shared between all jobs and returned by the /htc/projects/{projectId}/tasks/{taskId}/jobs/batch
-        endpoint would be available. Running :func:`rescalectrl.rjobs.RescaleJob.get_update` on this
+        endpoint would be available. Running :func:`rescalehtc.htcjobs.HtcJob.get_update` on this
         object would make all fields from /htc/projects/{projectId}/tasks/{taskId}/jobs/{jobId}
         available, but this should be used very rarely, especially with large number of jobs.
         """
@@ -109,13 +109,13 @@ class RescaleJob:
         self.log_lines_raw_inverted = None
 
     def __repr__(self):
-        return "RescaleJob(" + str(self.json) + ")"
+        return "HtcJob(" + str(self.json) + ")"
 
     # Refresh the information about a job
-    def get_update(self, rescale: RescaleSession) -> dict:
+    def get_update(self, rescale: HtcSession) -> dict:
         """
         Update the job status for this job, getting the latest status. Returns the
-        :attr:`rescalectrl.rjobs.RescaleJob.json` dict after updating.
+        :attr:`rescalehtc.htcjobs.HtcJob.json` dict after updating.
 
         This function has basic flood prevention on the job status requests.
         The API never updates more than every 30 seconds anyway,
@@ -149,8 +149,8 @@ class RescaleJob:
                 "STARTING",
                 "RUNNING",
             ]:
-                raise RescaleException(
-                    "Updating a RescaleJob status returned a status value that is not supported "
+                raise HtcException(
+                    "Updating a HtcJob status returned a status value that is not supported "
                     f"by this library: {self.json['status']}. "
                     "Please contact the library developers this is a critical bug in the library."
                 )
@@ -161,11 +161,11 @@ class RescaleJob:
 
         return self.json
 
-    def is_still_running(self, rescale: RescaleSession) -> bool:
+    def is_still_running(self, rescale: HtcSession) -> bool:
         """
         Update the status of the job, and return true if the job is still running or pending.
 
-        The possible values of the status field in :attr:`rescalectrl.rjobs.RescaleJob.json` are:
+        The possible values of the status field in :attr:`rescalehtc.htcjobs.HtcJob.json` are:
 
         ::
 
@@ -175,7 +175,7 @@ class RescaleJob:
             Values indicating the job is still running
             ["SUBMITTED_TO_RESCALE", "SUBMITTED_TO_PROVIDER", "RUNNABLE", "STARTING", "RUNNING"]
 
-        This function calls :func:`rescalectrl.rjobs.RescaleJob.get_update` and checks whether
+        This function calls :func:`rescalehtc.htcjobs.HtcJob.get_update` and checks whether
         the status field is in the categories shown above.
 
         This function has basic flood prevention on the job status requests.
@@ -191,7 +191,7 @@ class RescaleJob:
         ]
 
     def get_logs(
-        self, rescale: RescaleSession, last_n_lines: Optional[int] = None
+        self, rescale: HtcSession, last_n_lines: Optional[int] = None
     ) -> Iterable[str]:
         """
         Get stdout logs for this job. Returns an iterator of strings, one per line.
@@ -204,7 +204,7 @@ class RescaleJob:
         consume a lot of memory.
 
         For a more memory efficient way of fetching a lot, consider using
-        :func:`rescalectrl.rjobs.RescaleJob.get_logs_to_file`.
+        :func:`rescalehtc.htcjobs.HtcJob.get_logs_to_file`.
 
         This function has basic flood prevention on the job log requests.
         The API never updates more than every 30 seconds anyway,
@@ -235,7 +235,7 @@ class RescaleJob:
 
     def get_logs_to_file(
         self,
-        rescale: RescaleSession,
+        rescale: HtcSession,
         destination_file_path: str,
         last_n_lines: Optional[int] = None,
     ):
@@ -248,7 +248,7 @@ class RescaleJob:
         order that Rescale API returns logs. Then the log is reversed into the
         more friendly oldest line first ordering, and written to the target file.
 
-        More memory efficient than :func:`rescalectrl.rjobs.RescaleJob.get_logs`,
+        More memory efficient than :func:`rescalehtc.htcjobs.HtcJob.get_logs`,
         as the whole log is not kept in memory during fetching.
         """
 
@@ -270,12 +270,12 @@ class RescaleJob:
                     target_fp.write(line + "\n")
 
 
-class RescaleJobBatch:
+class HtcJobBatch:
     """
     Class for a batch series of rescale jobs.
     """
 
-    def __init__(self, json: dict, task: RescaleTask):
+    def __init__(self, json: dict, task: HtcTask):
         self.json: dict = json
         """The raw dictionary describing a batch run of jobs. The dictionary
         follows the HTCJobSubmitRequest schema in the Rescale HTC API documentation.
@@ -345,32 +345,32 @@ class RescaleJobBatch:
         self.task = task
 
     def __repr__(self):
-        return "RescaleJobBatch(" + str(self.json) + ")"
+        return "HtcJobBatch(" + str(self.json) + ")"
 
-    def get_task_summary(self, rescale: RescaleSession) -> dict:
+    def get_task_summary(self, rescale: HtcSession) -> dict:
         """
-        Gets the task summary for the task of this RescaleJobBatch.
+        Gets the task summary for the task of this HtcJobBatch.
 
-        Note that this includes all jobs in the task, not just this RescaleJobBatch.
+        Note that this includes all jobs in the task, not just this HtcJobBatch.
 
-        See documentation in :func:`rescalectrl.rtasks.RescaleTask.get_task_summary`
+        See documentation in :func:`rescalehtc.htctasks.HtcTask.get_task_summary`
         """
         return self.task.get_task_summary(rescale)
 
-    def is_still_running(self, rescale: RescaleSession) -> bool:
+    def is_still_running(self, rescale: HtcSession) -> bool:
         """
-        Check whether any jobs in the task for this RescaleJobBatch are still running.
+        Check whether any jobs in the task for this HtcJobBatch are still running.
 
-        Note that this includes all jobs in the task, not just this RescaleJobBatch.
+        Note that this includes all jobs in the task, not just this HtcJobBatch.
 
-        See documentation in :func:`rescalectrl.rtasks.RescaleTask.is_still_running`
+        See documentation in :func:`rescalehtc.htctasks.HtcTask.is_still_running`
         """
         return self.task.is_still_running(rescale)
 
-    def to_jobs(self) -> list[RescaleJob]:
+    def to_jobs(self) -> list[HtcJob]:
         """
-        Converts a RescaleJobBatch to an iterator of RescaleJob.
-        The details of each RescaleJob is a bit sparse, as we have not
+        Converts a HtcJobBatch to an iterator of HtcJob.
+        The details of each HtcJob is a bit sparse, as we have not
         queried the API for the status of each individual job.
 
         The following fields are available without calling job.get_update():
@@ -378,11 +378,11 @@ class RescaleJobBatch:
         group, projectId, taskId, jobUUID
 
         If you want to monitor the status of a set of jobs, its more
-        efficient to call :func:`~rescalectrl.rtasks.RescaleTask.get_task_summary`
-        on the task instead of polling the individual RescaleJobs.
+        efficient to call :func:`~rescalehtc.htctasks.HtcTask.get_task_summary`
+        on the task instead of polling the individual HtcJobs.
         """
         return [
-            RescaleJob(
+            HtcJob(
                 {
                     "group": self.json["group"],
                     "projectId": self.json["projectId"],
@@ -396,17 +396,17 @@ class RescaleJobBatch:
 
 
 def get_jobs(
-    rescale: RescaleSession, task: RescaleTask, job_status: str = "any"
-) -> list[RescaleJob]:
+    rescale: HtcSession, task: HtcTask, job_status: str = "any"
+) -> list[HtcJob]:
     """
     Get all jobs within a task with a particular job status. By default shows
     jobs with any status. Set job_status field e.g. to SUCCEEDED to filter on
     specific job statuses.
     """
-    if isinstance(task, RescaleTask):
+    if isinstance(task, HtcTask):
         task_id = task.json["taskId"]
     else:
-        raise RescaleException("Provided argument task is not a RescaleTask object.")
+        raise HtcException("Provided argument task is not a HtcTask object.")
 
     any_job_status = True if job_status in ["any", "all", None] else False
 
@@ -414,7 +414,7 @@ def get_jobs(
 
     all_jobs = api.get_htc_projects_tasks_jobs(rescale, project_id, task_id)
     matching_jobs = [
-        RescaleJob(job, task)
+        HtcJob(job, task)
         for job in all_jobs
         if any_job_status or job["status"] == job_status
     ]
@@ -422,34 +422,34 @@ def get_jobs(
 
 
 def get_job_with_id(
-    rescale: RescaleSession, task: RescaleTask, job_id: str
-) -> RescaleJob:
+    rescale: HtcSession, task: HtcTask, job_id: str
+) -> HtcJob:
     """
     Get a job with a specific ID within a task.
     """
-    if isinstance(task, RescaleTask):
+    if isinstance(task, HtcTask):
         task_id = task.json["taskId"]
     else:
-        raise RescaleException("Provided argument task is not a RescaleTask object.")
+        raise HtcException("Provided argument task is not a HtcTask object.")
 
     project_id = task.json["projectId"]
     task_id = task.json["taskId"]
 
     try:
         job = api.get_htc_projects_tasks_jobs(rescale, project_id, task_id, job_id)
-    except RescaleException as e:
+    except HtcException as e:
         return None
 
-    return RescaleJob(job, task)
+    return HtcJob(job, task)
 
 
 def create_single_job(
-    rescale: RescaleSession,
-    task: RescaleTask,
+    rescale: HtcSession,
+    task: HtcTask,
     priority: str,
     image_name: str,
     exec_timeout_seconds: int,
-    job_name: str = "rescalectrl_default_jobname",
+    job_name: str = "rescalehtc_default_jobname",
     max_vcpus: int = 1,
     max_memory_mib: int = 4000,
     max_swap_mib: int = 0,
@@ -461,12 +461,12 @@ def create_single_job(
     claims: list = [],
     architecture: str = "AARCH64",
     region: str = None,
-) -> RescaleJob:
+) -> HtcJob:
     """
     This function creates a single Rescale job. Inputs are split into python
     arguments, with many arguments having default values.
 
-    This function returns a RescaleJob.
+    This function returns a HtcJob.
 
     If you need to run several jobs, use :func:`create_job_batch` function instead.
 
@@ -483,7 +483,7 @@ def create_single_job(
     :param batch_tags: Optional: Tags given to the job batch
     :param commands: Optional: The command to run in the container, in list form: ['bash', '-c', 'echo hello world']
     :param envs: A list of environment variables to use in the run, as a list of dicts: [{"name": "MY_ENV_VAR", "value": "value_of_my_env_var"},..]
-    :param claims: Optional: Custom JWT Claims that will be attached to the Rescale JWT Bearer Token, as a list of dicts: [{"name": "my_claim_name", "value": "my_claim_value"},..] . Note that the name given here is prefixed by userDefined\_ in the actual JWT. Use :func:`rescalectrl.bearer_token.BearerToken.get_user_claims` to retrieve custom claims easily.
+    :param claims: Optional: Custom JWT Claims that will be attached to the Rescale JWT Bearer Token, as a list of dicts: [{"name": "my_claim_name", "value": "my_claim_value"},..] . Note that the name given here is prefixed by userDefined\_ in the actual JWT. Use :func:`rescalehtc.bearer_token.BearerToken.get_user_claims` to retrieve custom claims easily.
     :param architecture: Optional: The architecture to run container on, one of [ AARCH64, A100, X86 ]
     :param region: Optional: The compute region to run the container in. If the Rescale Project only has a single region this value can remain as None, and the available region will be picked.
 
@@ -513,7 +513,7 @@ def create_single_job(
     parent_job_id = batch.json["parentJobId"]
     job_id = parent_job_id + ":0"
 
-    return RescaleJob(
+    return HtcJob(
         api.get_htc_projects_tasks_jobs(
             rescale, task.json["projectId"], task.json["taskId"], job_id
         ),
@@ -522,13 +522,13 @@ def create_single_job(
 
 
 def create_job_batch(
-    rescale: RescaleSession,
-    task: RescaleTask,
+    rescale: HtcSession,
+    task: HtcTask,
     batch_size: int,
     priority: str,
     image_name: str,
     exec_timeout_seconds: int,
-    job_name: str = "rescalectrl_default_jobname",
+    job_name: str = "rescalehtc_default_jobname",
     max_vcpus: int = 1,
     max_memory_mib: int = 4000,
     max_swap_mib: int = 0,
@@ -540,7 +540,7 @@ def create_job_batch(
     claims: list = [],
     architecture: str = "AARCH64",
     region: str = None,
-) -> RescaleJobBatch:
+) -> HtcJobBatch:
     """
     This function creates batch of Rescale jobs. Inputs are split into python
     arguments, with many arguments having default values.
@@ -558,7 +558,7 @@ def create_job_batch(
     :param batch_tags: Optional: Tags given to the job batch
     :param commands: Optional: The command to run in the container, in list form: ['bash', '-c', 'echo hello world']
     :param envs: A list of environment variables to use in the run, as a list of dicts: [{"name": "MY_ENV_VAR", "value": "value_of_my_env_var"},..]
-    :param claims: Optional: Custom JWT Claims that will be attached to the Rescale JWT Bearer Token, as a list of dicts: [{"name": "my_claim_name", "value": "my_claim_value"},..] . Note that the name given here is prefixed by userDefined\_ in the actual JWT. Use :func:`rescalectrl.bearer_token.BearerToken.get_user_claims` to retrieve custom claims easily.
+    :param claims: Optional: Custom JWT Claims that will be attached to the Rescale JWT Bearer Token, as a list of dicts: [{"name": "my_claim_name", "value": "my_claim_value"},..] . Note that the name given here is prefixed by userDefined\_ in the actual JWT. Use :func:`rescalehtc.bearer_token.BearerToken.get_user_claims` to retrieve custom claims easily.
     :param architecture: Optional: The architecture to run container on, one of [ AARCH64, A100, X86 ]
     :param region: Optional: The compute region to run the container in. If the Rescale Project only has a single region this value can remain as None, and the available region will be picked.
 
@@ -567,7 +567,7 @@ def create_job_batch(
     """
     if region == None:
         if len(task.project.json["regions"]) != 1:
-            raise RescaleException(
+            raise HtcException(
                 f"During job creation, region argument was not given (None) but multiple regions "
                 f"exist in this Rescale Project: {task.project.json['regions']}. If there are multiple "
                 "regions, you need to explicitly pick one."
@@ -577,7 +577,7 @@ def create_job_batch(
         selected_region = region
 
         if selected_region not in task.project.json["regions"]:
-            raise RescaleException(
+            raise HtcException(
                 f"During job creation, region argument was set to {region} but this "
                 f"region was not found in the Rescale Project: {task.project.json['regions']}"
             )
@@ -587,24 +587,24 @@ def create_job_batch(
     elif "AWS" in selected_region:
         cloud_provider = "AWS"
     else:
-        raise RescaleException(
+        raise HtcException(
             f'Picked first region in {task.project.json["regions"]} but could not figure out which cloud provider this belongs to.'
         )
 
     # Sanity checking of various arguments
     supported_priority_types = ["ON_DEMAND_ECONOMY", "ON_DEMAND_PRIORITY"]
     if priority not in supported_priority_types:
-        raise RescaleException(
+        raise HtcException(
             f"During job creation, priority was set to unsupported value {priority}. Valid values are {supported_priority_types}"
         )
 
     if not isinstance(envs, list):
-        raise RescaleException(
+        raise HtcException(
             f"During job creation, the envs argument is not a list: {envs}"
         )
 
     if not isinstance(commands, list):
-        raise RescaleException(
+        raise HtcException(
             "During job creation, the commands argument is not a list. Expected e.g. "
             "['bash', '-c', 'echo hello world'], "
             f"got {commands}"
@@ -612,7 +612,7 @@ def create_job_batch(
 
     for env in envs:
         if not isinstance(env, dict) or set(env.keys()) != set(["name, value"]):
-            raise RescaleException(
+            raise HtcException(
                 f"During job creation, the envs argument is not formatted as a list of dicts. "
                 'Expected list of dicts: [{"name": "MY_ENV_VAR", "value": "value_of_my_env_var"},..],  '
                 f"got {envs}"
@@ -620,7 +620,7 @@ def create_job_batch(
 
     for claim in claims:
         if not isinstance(claim, dict) or set(claim.keys()) != set(["name", "value"]):
-            raise RescaleException(
+            raise HtcException(
                 f"During job creation, the claims argument is not formatted as a list of dicts. "
                 'Expected list of dicts: [{"name": "my_claim_name", "value": "my_claim_value"},..],  '
                 f"got {claims}"
@@ -628,7 +628,7 @@ def create_job_batch(
 
     supported_architecture_types = ["AARCH64", "A100", "X86"]
     if architecture not in supported_architecture_types:
-        raise RescaleException(
+        raise HtcException(
             f"During job creation, architecture was set to unsupported value {architecture}. Valid values are {supported_architecture_types}"
         )
 
@@ -659,8 +659,8 @@ def create_job_batch(
 
 
 def create_job_batch_raw(
-    rescale: RescaleSession, task: RescaleTask, payload: list[dict]
-) -> RescaleJobBatch:
+    rescale: HtcSession, task: HtcTask, payload: list[dict]
+) -> HtcJobBatch:
     """
     This function creates batch of Rescale jobs.
 
@@ -669,11 +669,11 @@ def create_job_batch_raw(
     Most users should use :func:`create_job_batch` instead of this raw function. That function
     accepts separate arguments for the individual fields instead of the full JSON dict.
     """
-    if isinstance(task, RescaleTask):
+    if isinstance(task, HtcTask):
         task_id = task.json["taskId"]
         project_id = task.json["projectId"]
     else:
-        raise RescaleException("Provided argument task is not a RescaleTask object.")
+        raise HtcException("Provided argument task is not a HtcTask object.")
 
     # Wait for the image to transition to the ready stage
     # Loop over each batch definition if there are multiple
@@ -683,7 +683,7 @@ def create_job_batch_raw(
         image_name = job_batch["htcJobDefinition"]["imageName"]
         while True:
             if waited_for > MAX_WAIT_FOR_IMAGE_TRANSITION_PENDING_READY_SECONDS:
-                raise RescaleException(
+                raise HtcException(
                     f"While waiting for {image_name} to transition from PENDING to READY, waited longer than timeout {MAX_WAIT_FOR_IMAGE_TRANSITION_PENDING_READY_SECONDS}."
                 )
             image_status = api.get_htc_projects_container_registry_images(
@@ -697,7 +697,7 @@ def create_job_batch_raw(
                 waited_for += wait_interval
                 time.sleep(wait_interval)
             else:
-                raise RescaleException(
+                raise HtcException(
                     f"Unexpected status of an image recieved, got {image_status} for {image_name}."
                 )
 
@@ -706,7 +706,7 @@ def create_job_batch_raw(
     )
     # We only support a single batch per API call here, so safe to
     # index into the first one.
-    return RescaleJobBatch(res[0], task)
+    return HtcJobBatch(res[0], task)
 
 
 # A generator that returns the lines of a file in reverse order

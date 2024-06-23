@@ -1,6 +1,6 @@
 JWT Bearer Token utilities
-==================================
+==========================
 
-.. automodule:: rescalectrl.bearer_token
+.. automodule:: rescalehtc.bearer_token
    :members:
 

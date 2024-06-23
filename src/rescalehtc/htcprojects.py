@@ -1,17 +1,17 @@
 """
 This module holds functions that deal with Rescale Projects.
-Projects are returned as a RescaleProject object, which can
+Projects are returned as a HtcProject object, which can
 be used for later library calls.
 """
 from __future__ import annotations
-from .exceptions import RescaleException
-from . import RescaleSession, api
+from .exceptions import HtcException
+from . import HtcSession, api
 
 
-class RescaleProject:
+class HtcProject:
     """
     Class which represents a single Rescale Project. Use the functions in
-    rescalectrl.projects to create this object.
+    rescalehtc.projects to create this object.
     """
 
     def __init__(self, json : dict):
@@ -55,9 +55,9 @@ class RescaleProject:
         """
 
     def __repr__(self):
-        return "RescaleProject(" + str(self.json) + ")"
+        return "HtcProject(" + str(self.json) + ")"
 
-    def get_limits(self, rescale: RescaleSession) -> list[dict]:
+    def get_limits(self, rescale: HtcSession) -> list[dict]:
         """
         Return the limits that are applied to this project, for example
         the maximum concurrect vCPU count that can be used. Returns a
@@ -65,18 +65,18 @@ class RescaleProject:
         """
         return api.get_htc_projects_limits(rescale, self.json["projectId"])
 
-    def set_vcpu_limit(self, rescale: RescaleSession, modifier_role: str, vcpu_limit: int):
+    def set_vcpu_limit(self, rescale: HtcSession, modifier_role: str, vcpu_limit: int):
         """
         Set the maximum concurrent number of vCPUs for this project. This
         may require certain privileges.
         """
         valid_modifier_roles = ["PROJECT_ADMIN", "WORKSPACE_ADMIN"]
         if modifier_role not in valid_modifier_roles:
-            raise RescaleException(
+            raise HtcException(
                 f"Provided modifier_role {modifier_role} is not a valid one ({valid_modifier_roles})"
             )
         if not vcpu_limit > 0:
-            raise RescaleException(f"vCPU limit is not a valid value: {vcpu_limit}")
+            raise HtcException(f"vCPU limit is not a valid value: {vcpu_limit}")
         return api.post_htc_projects_limits(
             rescale,
             self.json["projectId"],
@@ -84,21 +84,21 @@ class RescaleProject:
         )
 
 
-def get_projects(rescale: RescaleSession) -> list[RescaleProject]:
+def get_projects(rescale: HtcSession) -> list[HtcProject]:
     """
     Get all the projects available in the current workspace.
-    Return the projects as RescaleProject objects.
+    Return the projects as HtcProject objects.
     """
     projects = api.get_htc_projects(rescale)
     if len(projects) == 0:
         return None
-    return [RescaleProject(project) for project in projects]
+    return [HtcProject(project) for project in projects]
 
 
-def get_project_with_name(rescale: RescaleSession, project_name: str) -> RescaleProject:
+def get_project_with_name(rescale: HtcSession, project_name: str) -> HtcProject:
     """
     Get a single project within this workspace that matches the given name.
-    Return the project as a RescaleProject. Returns None if no matching
+    Return the project as a HtcProject. Returns None if no matching
     project was found. Throws an exception if the workspace contains several
     projects with the same name.
     """
@@ -107,24 +107,24 @@ def get_project_with_name(rescale: RescaleSession, project_name: str) -> Rescale
         project for project in projects if project["projectName"] == project_name
     ]
     if len(matching_projects) == 1:
-        return RescaleProject(matching_projects[0])
+        return HtcProject(matching_projects[0])
     elif len(matching_projects) == 0:
         return None
     else:
-        raise RescaleException(
+        raise HtcException(
             f"More than one project with the name {project_name} found in projects list {projects}"
         )
 
 
-def get_project_with_id(rescale: RescaleSession, project_id: str) -> RescaleProject:
+def get_project_with_id(rescale: HtcSession, project_id: str) -> HtcProject:
     """
     Get a single project within this workspace with a specific ID.
-    Return the project as a RescaleProject. Returns None if no matching
+    Return the project as a HtcProject. Returns None if no matching
     project was found.
     """
     try:
         project = api.get_htc_projects(rescale, project_id=project_id)
-    except RescaleException as e:
+    except HtcException as e:
         # If we didn't find a project with this ID (indicated by 404) then return None
         if e.status_code == 404:
             return None
@@ -132,4 +132,4 @@ def get_project_with_id(rescale: RescaleSession, project_id: str) -> RescaleProj
         else:
             raise
 
-    return RescaleProject(project)
+    return HtcProject(project)

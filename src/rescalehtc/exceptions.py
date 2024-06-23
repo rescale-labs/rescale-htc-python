@@ -1,5 +1,5 @@
 """
-This module holds Exceptions used by the rescalectrl library.
+This module holds Exceptions used by the rescalehtc library.
 
 Operations that cause an exception to be raised are:
 
@@ -11,16 +11,16 @@ Normal "empty-result" operations like if searching for a list
 of tasks by name returns 0 entries will not cause an exception,
 but instead return an empty list.
 
-Searches for e.g. tasks by ID like in :func:`rescalectrl.rtasks.get_task_with_id`
+Searches for e.g. tasks by ID like in :func:`rescalehtc.htctasks.get_task_with_id`
 returns None if nothing is found.
 
 Delete operations by ID will return None if a task is not deleted
-succesfully, like in :func:`rescalectrl.rtasks.delete_task_with_id`.
+succesfully, like in :func:`rescalehtc.htctasks.delete_task_with_id`.
 """
 from __future__ import annotations
 
 
-class RescaleException(Exception):
+class HtcException(Exception):
     """
     Main exception for this library.
     """

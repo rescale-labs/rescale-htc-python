@@ -1,11 +1,10 @@
 Versioning and compatibility
-==========================================
+============================
 
-This library follows Semantic Versioning, as defined in
-https://semver.org/
+This library follows Semantic Versioning, as defined in https://semver.org/
 
 ::
-
+    
     Given a version number MAJOR.MINOR.PATCH, increment the:
 
     MAJOR version when you make incompatible API changes

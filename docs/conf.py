@@ -11,7 +11,7 @@ from sphinx_pyproject import SphinxConfig
 # Fetch author and release etc from pyproject.toml
 config = SphinxConfig("../pyproject.toml", globalns=globals())
 
-project = 'rescalectrl'
+project = 'rescalehtc'
 copyright = 'MIT License'
 
 # -- General configuration ---------------------------------------------------

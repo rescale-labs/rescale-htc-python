@@ -1,6 +1,6 @@
 Exceptions and error handling
-==================================
+=============================
 
-.. automodule:: rescalectrl.exceptions
+.. automodule:: rescalehtc.exceptions
    :members:
 

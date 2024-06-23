@@ -1,7 +1,7 @@
 from __future__ import annotations
 import base64
 import json
-from .exceptions import RescaleException
+from .exceptions import HtcException
 
 
 class BearerToken:
@@ -59,13 +59,13 @@ def token_from_str(data: str) -> BearerToken:
     of the form "xxxx.yyyy.zzzzz".
 
     End users should normally not use this function, instead get the BearerToken
-    object by calling :func:`~rescalectrl.rescale_session.RescaleSession.get_bearer_token`
-    on the RescaleSession object.
+    object by calling :func:`~rescalehtc.htcsession.HtcSession.get_bearer_token`
+    on the HtcSession object.
     """
     components = data.split(".")
 
     if len(components) != 3:
-        raise RescaleException(
+        raise HtcException(
             f"Could not decode token. Expected 3 period separated components, "
             f'found {len(components)}. Raw data: "{data}"'
         )

@@ -8,16 +8,16 @@ from .logger import logger
 from datetime import datetime, timedelta
 import random
 
-class RescaleSession:
+class HtcSession:
     """
-    Top level of rescalectrl, keeping the authentication
+    Top level of rescalehtc, keeping the authentication
     state and allowing reauthentication as needed. This
     object needs to be passed into any function that will
     talk to the Rescale API.
 
     Before instancing this class for the first time in a non-rescale environment
     such as your own machine or a VM, use the ``rauthenticate`` executable script
-    that comes bundled with rescalectrl. This writes tokens to ``~/.rescalectrl/`` for later use.
+    that comes bundled with rescalehtc. This writes tokens to ``~/.rescalehtc/`` for later use.
 
     In an interactive environment, do:
 
@@ -36,15 +36,15 @@ class RescaleSession:
 
     def __init__(self, workspace="default", config_folder_override=None):
         """
-        :param workspace: Optional: If you are working with multiple workspaces (which each has their own API key), then specify the workspace name here. This is required if you have more than 1 API key in ~/.rescalectrl/.
-        :param config_folder_override: Optional: Override the default configuration folder, which by default is ~/.config/.rescalectrl/.
+        :param workspace: Optional: If you are working with multiple workspaces (which each has their own API key), then specify the workspace name here. This is required if you have more than 1 API key in ~/.rescalehtc/.
+        :param config_folder_override: Optional: Override the default configuration folder, which by default is ~/.config/.rescalehtc/.
         """
 
         self.workspace = workspace
 
-        # Store these constants in the RescaleSession object, to simplify mocking them during unittest
-        self.RESCALE_API_BASE_URL = RescaleSession.get_rescale_api_base_url()
-        self.CONFIG_FOLDER = RescaleSession.get_config_folder(config_folder_override)
+        # Store these constants in the HtcSession object, to simplify mocking them during unittest
+        self.RESCALE_API_BASE_URL = HtcSession.get_rescale_api_base_url()
+        self.CONFIG_FOLDER = HtcSession.get_config_folder(config_folder_override)
 
         # Use a shared requests session
         self.requests_session = requests.Session()

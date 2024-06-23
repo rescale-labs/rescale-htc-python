@@ -15,34 +15,34 @@ from subprocess import run
 import subprocess
 import sys
 from typing import Optional
-from .rprojects import RescaleProject
-from .exceptions import RescaleException
+from .htcprojects import HtcProject
+from .exceptions import HtcException
 from . import api
-from .rescale_session import RescaleSession
+from .htcsession import HtcSession
 
 
-class RescaleContainerRegistry:
+class HtcContainerRegistry:
     """
     Class that holds information about a container registry. This info
     is commonly used to docker login, which enables docker push and
     docker pull of container images.
 
-    Use the function :func:`rescalectrl.container_registry.get_container_registry`
+    Use the function :func:`rescalehtc.container_registry.get_container_registry`
     to create this object.
 
     The container registry token should be accessed through the
-    :func:`rescalectrl.container_registry.RescaleContainerRegistry.get_token` function,
+    :func:`rescalehtc.container_registry.HtcContainerRegistry.get_token` function,
     as keys may expire and require renewal (handled transparently by this class).
     """
 
     def __init__(self, project, registry_url, login_method, username, token):
-        self.project: RescaleProject = project
+        self.project: HtcProject = project
         self.registry_url: str = registry_url
         self.login_method: str = login_method
         self.username: str = username
         self._token: str = token
 
-    def get_images(self, rescale: RescaleSession) -> list[str]:
+    def get_images(self, rescale: HtcSession) -> list[str]:
         """
         List all image names available in this container registry.
         """
@@ -52,7 +52,7 @@ class RescaleContainerRegistry:
 
     def push_docker_image(
         self,
-        rescale: RescaleSession,
+        rescale: HtcSession,
         local_image_name: str,
         remote_image_name: Optional[str] = None,
         quiet: bool = False,
@@ -78,13 +78,13 @@ class RescaleContainerRegistry:
         mute these, set quiet=True.
         """
         if "aws.com" not in self.registry_url:
-            raise RescaleException(
+            raise HtcException(
                 f"Unable to push docker image to non-AWS registry {self.registry_url}, don't "
                 "know how to authenticate against other registry types yet. Contact the maintainers."
             )
 
         if local_image_name.count(":") != 1:
-            raise RescaleException(
+            raise HtcException(
                 f"A docker image name needs to be given with the full tag, in the format imagename:tag"
             )
 
@@ -105,13 +105,13 @@ class RescaleContainerRegistry:
                     capture_output=True,
                 ).stdout.decode("utf-8")
             except Exception as e:
-                raise RescaleException(
+                raise HtcException(
                     f"Unable extract information about local docker image {local_image_name}. "
                     f"Can you run docker as this user? See https://docs.docker.com/engine/install/linux-postinstall/"
                     f" Error: {repr(e)}"
                 )
             if local_image_json_str.strip() == "":
-                raise RescaleException(
+                raise HtcException(
                     f"Unable to find a local docker image named {local_image_name}. "
                     f"Does the image exist locally? If it is a remote image, you need to run "
                     f"'docker pull {local_image_name}' first. Command that was run: {cmd}")
@@ -120,7 +120,7 @@ class RescaleContainerRegistry:
             # Pick out the sha256:b038788ddb222cb.... hash, then drop the sha prefix
             local_image_sha = local_image_json["ID"]
             if local_image_sha.count(":") != 1:
-                raise RescaleException(f"Got a weird docker image ID when running {cmd}: {local_image_json}")
+                raise HtcException(f"Got a weird docker image ID when running {cmd}: {local_image_json}")
             local_image_id = local_image_sha.split(':')[1]
             # Use the first 10 chars after : as the suffix for the container name
             remote_image_name = f"{local_image_name}-{local_image_id[:10]}"
@@ -139,7 +139,7 @@ class RescaleContainerRegistry:
                 stdout=stdout,
             )
         except Exception as e:
-            raise RescaleException(f"Unable to log into container registry: {repr(e)}")
+            raise HtcException(f"Unable to log into container registry: {repr(e)}")
         try:
             # Tag the image with the registry URL so that docker knows where to push it
             run(
@@ -150,7 +150,7 @@ class RescaleContainerRegistry:
                 stdout=stdout,
             )
         except Exception as e:
-            raise RescaleException(
+            raise HtcException(
                 f"Unable to tag docker image {local_image_name} as {self.registry_url}{remote_image_name}: {repr(e)}"
             )
         try:
@@ -163,7 +163,7 @@ class RescaleContainerRegistry:
                 stdout=stdout,
             )
         except Exception as e:
-            raise RescaleException(
+            raise HtcException(
                 f"Unable to push docker image to container registry: {repr(e)}"
             )
 
@@ -172,7 +172,7 @@ class RescaleContainerRegistry:
 
         return remote_image_name
 
-    def get_image(self, rescale: RescaleSession, image_name: str) -> dict:
+    def get_image(self, rescale: HtcSession, image_name: str) -> dict:
         """
         Show information about a container image with a specific name. Currently in the API
         this only returns a dict with 1 element: "status" : "PENDING" or "READY", indicating
@@ -182,21 +182,21 @@ class RescaleContainerRegistry:
             rescale, self.project.json["projectId"], image_name
         )
 
-    def is_image_ready(self, rescale: RescaleSession, image_name: str) -> bool:
+    def is_image_ready(self, rescale: HtcSession, image_name: str) -> bool:
         """
         Returns true if the status of the container image is READY, otherwise false. An
         image in READY status can be used by rescale jobs.
 
         Use this function after pushing a new container image and before submitting jobs
         to Rescale. Attempting to start a job with an image in PENDING state causes a
-        RescaleException during job submission.
+        HtcException during job submission.
 
         Note that state READY does not guarantee you get the latest image, just that an
         image with this name is available in the repository.
         """
         return self.get_image(rescale, image_name)["status"] == "READY"
 
-    def delete_image(self, rescale: RescaleSession, image_name: str) -> bool:
+    def delete_image(self, rescale: HtcSession, image_name: str) -> bool:
         """
         Deletes an image from the container registry.
         """
@@ -204,7 +204,7 @@ class RescaleContainerRegistry:
             rescale, self.project.json["projectId"], image_name
         )
 
-    def get_repos(self, rescale: RescaleSession) -> list[str]:
+    def get_repos(self, rescale: HtcSession) -> list[str]:
         """
         List all container repositories that have been created in this container registry.
         """
@@ -212,7 +212,7 @@ class RescaleContainerRegistry:
         images = api.get_htc_projects(rescale, project_id)
         return images["repositories"]
 
-    def create_repo(self, rescale: RescaleSession, container_repo_name: str) -> dict:
+    def create_repo(self, rescale: HtcSession, container_repo_name: str) -> dict:
         """
         Create a container image repo in this container registry with the specified name.
         """
@@ -220,7 +220,7 @@ class RescaleContainerRegistry:
             rescale, self.project.json["projectId"], container_repo_name
         )
 
-    def get_token(self, rescale: RescaleSession) -> str:
+    def get_token(self, rescale: HtcSession) -> str:
         """
         Get a non-expired token for this container registry.
 
@@ -232,18 +232,18 @@ class RescaleContainerRegistry:
 
 
 def get_container_registry(
-    rescale: RescaleSession, project: RescaleProject
-) -> RescaleContainerRegistry:
+    rescale: HtcSession, project: HtcProject
+) -> HtcContainerRegistry:
     """
     Get the container registry information needed to us it. This returns
     information such as the URL to the container registry, and the user
     name and password used to log into it.
 
-    This function returns a RescaleContainerRegistry object.
+    This function returns a HtcContainerRegistry object.
     """
-    if not isinstance(project, RescaleProject):
-        raise RescaleException(
-            "Provided project argument is not a RescaleProject object."
+    if not isinstance(project, HtcProject):
+        raise HtcException(
+            "Provided project argument is not a HtcProject object."
         )
 
     token = api.get_htc_projects_container_registry_token(
@@ -255,11 +255,11 @@ def get_container_registry(
         username = "AWS"
         login_method = "username_token"
     else:
-        raise RescaleException(
+        raise HtcException(
             f"Unable to determine the type of container registry "
             f"for URL {registry_url}, needed to determine login method."
         )
 
-    return RescaleContainerRegistry(
+    return HtcContainerRegistry(
         project, registry_url, login_method, username, token
     )

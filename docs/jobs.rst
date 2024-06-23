@@ -1,5 +1,5 @@
-Rescale Jobs and JobBatch
-=============================
+HTC Jobs and JobBatch
+=====================
 
-.. automodule:: rescalectrl.rjobs
+.. automodule:: rescalehtc.htcjobs
    :members:

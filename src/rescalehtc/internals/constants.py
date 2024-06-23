@@ -1,9 +1,9 @@
 import os
 
 # These two should never be imported directly, as they're mocked
-# during tests. Use the member variables of RescaleSession object instead.
+# during tests. Use the member variables of HtcSession object instead.
 _RESCALE_API_BASE_URL = "https://htc.rescale.com/api/v1"
-_CONFIG_FOLDER = os.path.expanduser("~/.config/rescalectrl")
+_CONFIG_FOLDER = os.path.expanduser("~/.config/rescalehtc")
 
 # List of all the valid job statuses
 VALID_JOB_STATUSES = [

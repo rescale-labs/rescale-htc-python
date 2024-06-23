@@ -9,7 +9,7 @@ import logging
 import shutil
 import api_flask_mock
 
-# Unittest specific overrides, to be mocked into the rescalectrl module
+# Unittest specific overrides, to be mocked into the rescalehtc module
 TEST_CONFIG_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/tmp_configfolder/"
 TEST_BASE_URL = "http://127.0.0.1:5000"
 
@@ -18,9 +18,9 @@ import logging
 logging.basicConfig(level=logging.NOTSET)
 
 # Library under test
-import rescalectrl
-from rescalectrl import api
-from rescalectrl.api import *
+import rescalehtc
+from rescalehtc import api
+from rescalehtc.api import *
 
 class TestsHighlevel(unittest.TestCase):
 
@@ -41,14 +41,14 @@ class TestsHighlevel(unittest.TestCase):
             fp.write("mock-api-key==")
 
     def setUp(self):
-        if "RESCALECTRL_MOCK_TARGET_STATUS" in os.environ:
-            del os.environ["RESCALECTRL_MOCK_TARGET_STATUS"]
+        if "RESCALEHTC_MOCK_TARGET_STATUS" in os.environ:
+            del os.environ["RESCALEHTC_MOCK_TARGET_STATUS"]
         # Mock URL and config folder in authenticate module
-        with mock.patch.multiple("rescalectrl.rescale_session.RescaleSession",
+        with mock.patch.multiple("rescalehtc.htcsession.HtcSession",
                 get_rescale_api_base_url=lambda : TEST_BASE_URL,
                 get_config_folder=lambda _ : TEST_CONFIG_FOLDER,
             ):
-            self.rs = rescalectrl.rescale_session.RescaleSession()
+            self.rs = rescalehtc.htcsession.HtcSession()
         # Empty line to separate tests
         print()
 
@@ -76,7 +76,7 @@ class TestsHighlevel(unittest.TestCase):
         try:
             get_htc_metrics(self.rs)
             raise Exception
-        except RescaleException:
+        except HtcException:
             pass # Expecting this to give exception
 
     def test_api_project_resource(self):

@@ -1,5 +1,5 @@
-Rescale Tasks
-=========================
+HTC Tasks
+=========
 
-.. automodule:: rescalectrl.rtasks
+.. automodule:: rescalehtc.htctasks
    :members:

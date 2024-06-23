@@ -5,15 +5,15 @@ import argparse
 import requests
 
 from ..internals.constants import REQUESTS_TIMEOUTS
-from .. import RescaleSession, api
+from .. import HtcSession, api
 import logging
 import os
 
 
 def main(args):
-    logger = logging.getLogger("RESCALECTRL")
+    logger = logging.getLogger("RESCALEHTC")
 
-    config_folder = RescaleSession.get_config_folder(None)
+    config_folder = HtcSession.get_config_folder(None)
     default_config_folder = f"{config_folder}/default"
     default_api_token_file = f"{default_config_folder}/rescale_api_token.txt"
 
@@ -26,7 +26,7 @@ def main(args):
             api_key = os.environ["RESCALE_API_TOKEN"]
 
         # Attempt to use the API, and figure out which workspace it is related to
-        endpoint = f"{RescaleSession.get_rescale_api_base_url()}/auth/whoami"
+        endpoint = f"{HtcSession.get_rescale_api_base_url()}/auth/whoami"
         res = requests.get(
             endpoint,
             headers={"Authorization": f"Token {api_key}"},
@@ -52,7 +52,7 @@ def main(args):
         api_token_file = f"{workspace_folder}/rescale_api_token.txt"
 
         print(f"Writing API key to {api_token_file}")
-        # Create the .rescalectrl folder
+        # Create the .rescalehtc folder
         if not os.path.isdir(config_folder):
             os.makedirs(config_folder)
 
@@ -67,7 +67,7 @@ def main(args):
         ):
             os.remove(default_config_folder)
 
-        # Add a symlink from .rescalectrl/default/ to .rescalectrl/<workspace>/
+        # Add a symlink from .rescalehtc/default/ to .rescalehtc/<workspace>/
         if not os.path.exists(default_config_folder):
             os.symlink(
                 workspace_folder, default_config_folder, target_is_directory=True
@@ -99,7 +99,7 @@ def main(args):
 
     print("Testing that authentation works:")
 
-    rescale = RescaleSession()
+    rescale = HtcSession()
 
     whoami = api.get_auth_token_whoami(rescale)
 

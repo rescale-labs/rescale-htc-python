@@ -8,7 +8,7 @@ This is a flask REST API that mocks the Rescale HTC API.
 It returns the values from the examples shown in the REST
 API documentation for each of the possible status codes.
 
-This REST API can then be used to test the rescalectrl library.
+This REST API can then be used to test the rescalehtc library.
 """
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ def endpoint_GET__auth_token():
 # to be able to progress a job start API request
 @app.route("/htc/projects/<projectId>/container-registry/images/<imageName>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_container_registry_images_imageName_(projectId, imageName):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "status": "READY"
@@ -50,7 +50,7 @@ def endpoint_GET__htc_projects_projectId_container_registry_images_imageName_(pr
 
 @app.route("/.well-known/jwks.json", methods=["GET"])
 def endpoint_GET__well_known_jwks_json():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "keys": [
@@ -115,7 +115,7 @@ def endpoint_GET__well_known_jwks_json():
 
 @app.route("/auth/token/whoami", methods=["GET"])
 def endpoint_GET__auth_token_whoami():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return ('"string"', 200 )
     if target_status == 401:
@@ -129,7 +129,7 @@ def endpoint_GET__auth_token_whoami():
 
 @app.route("/auth/whoami", methods=["GET"])
 def endpoint_GET__auth_whoami():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "user": {
@@ -174,7 +174,7 @@ def endpoint_GET__auth_whoami():
 
 @app.route("/oauth2/token", methods=["POST"])
 def endpoint_POST__oauth2_token():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "access_token": "string",
@@ -190,7 +190,7 @@ def endpoint_POST__oauth2_token():
 
 @app.route("/htc/gcp/clusters/<workspaceId>", methods=["GET"])
 def endpoint_GET__htc_gcp_clusters_workspaceId_(workspaceId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "gcpProjectId": "string",
@@ -242,7 +242,7 @@ def endpoint_GET__htc_gcp_clusters_workspaceId_(workspaceId):
 
 @app.route("/htc/regions", methods=["GET"])
 def endpoint_GET__htc_regions():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "name": "string",
@@ -262,7 +262,7 @@ def endpoint_GET__htc_regions():
 
 @app.route("/htc/regions/<region>", methods=["GET"])
 def endpoint_GET__htc_regions_region_(region):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "region": "AWS_AP_SOUTHEAST_1",
@@ -288,7 +288,7 @@ def endpoint_GET__htc_regions_region_(region):
 
 @app.route("/htc/metrics", methods=["GET"])
 def endpoint_GET__htc_metrics():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return ('string', 200 )
     if target_status == 401:
@@ -299,7 +299,7 @@ def endpoint_GET__htc_metrics():
 
 @app.route("/htc/projects", methods=["GET"])
 def endpoint_GET__htc_projects():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -343,7 +343,7 @@ def endpoint_GET__htc_projects():
 
 @app.route("/htc/projects", methods=["POST"])
 def endpoint_POST__htc_projects():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -382,7 +382,7 @@ def endpoint_POST__htc_projects():
 
 @app.route("/htc/projects/<projectId>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -421,7 +421,7 @@ def endpoint_GET__htc_projects_projectId_(projectId):
 
 @app.route("/htc/projects/<projectId>", methods=["PATCH"])
 def endpoint_PATCH__htc_projects_projectId_(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -460,7 +460,7 @@ def endpoint_PATCH__htc_projects_projectId_(projectId):
 
 @app.route("/htc/projects/<projectId>/dimensions", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_dimensions(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   {
@@ -484,7 +484,7 @@ def endpoint_GET__htc_projects_projectId_dimensions(projectId):
 
 @app.route("/htc/projects/<projectId>/dimensions", methods=["PUT"])
 def endpoint_PUT__htc_projects_projectId_dimensions(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 201:
         return (jsonify(json.loads("""[
   {
@@ -508,7 +508,7 @@ def endpoint_PUT__htc_projects_projectId_dimensions(projectId):
 
 @app.route("/htc/projects/<projectId>/limits", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_limits(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   {
@@ -531,7 +531,7 @@ def endpoint_GET__htc_projects_projectId_limits(projectId):
 
 @app.route("/htc/projects/<projectId>/limits", methods=["POST"])
 def endpoint_POST__htc_projects_projectId_limits(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 201:
         return (jsonify(json.loads("""{
   "createdBy": "qWoUF",
@@ -552,7 +552,7 @@ def endpoint_POST__htc_projects_projectId_limits(projectId):
 
 @app.route("/htc/projects/<projectId>/limits", methods=["DELETE"])
 def endpoint_DELETE__htc_projects_projectId_limits(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 204:
         return "", 204
     if target_status == 401:
@@ -563,7 +563,7 @@ def endpoint_DELETE__htc_projects_projectId_limits(projectId):
 
 @app.route("/htc/projects/<projectId>/limits/<id>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_limits_id_(projectId, id):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "createdBy": "qWoUF",
@@ -584,7 +584,7 @@ def endpoint_GET__htc_projects_projectId_limits_id_(projectId, id):
 
 @app.route("/htc/projects/<projectId>/limits/<id>", methods=["DELETE"])
 def endpoint_DELETE__htc_projects_projectId_limits_id_(projectId, id):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 204:
         return "", 204
     if target_status == 401:
@@ -595,7 +595,7 @@ def endpoint_DELETE__htc_projects_projectId_limits_id_(projectId, id):
 
 @app.route("/htc/projects/<projectId>/limits/<id>", methods=["PATCH"])
 def endpoint_PATCH__htc_projects_projectId_limits_id_(projectId, id):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "createdBy": "qWoUF",
@@ -616,7 +616,7 @@ def endpoint_PATCH__htc_projects_projectId_limits_id_(projectId, id):
 
 @app.route("/htc/projects/<projectId>/storage/presigned-url", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_storage_presigned_url(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "url": "https://presigned-put-url/my-storage",
@@ -632,7 +632,7 @@ def endpoint_GET__htc_projects_projectId_storage_presigned_url(projectId):
 
 @app.route("/htc/projects/<projectId>/storage/token", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_storage_token(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectSharedStoragePath": "s3://my-storage/projects/project-12345/shared/",
@@ -656,7 +656,7 @@ def endpoint_GET__htc_projects_projectId_storage_token(projectId):
 
 @app.route("/htc/projects/<projectId>/storage/token/<region>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_storage_token_region_(projectId, region):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectSharedStoragePath": "s3://my-storage/projects/project-12345/shared/",
@@ -680,7 +680,7 @@ def endpoint_GET__htc_projects_projectId_storage_token_region_(projectId, region
 
 @app.route("/htc/projects/<projectId>/storage/tokens", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_storage_tokens(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "defaultRegion": "AWS_AP_SOUTHEAST_1",
@@ -709,7 +709,7 @@ def endpoint_GET__htc_projects_projectId_storage_tokens(projectId):
 
 @app.route("/htc/projects/<projectId>/task-retention-policy", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_task_retention_policy(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -725,7 +725,7 @@ def endpoint_GET__htc_projects_projectId_task_retention_policy(projectId):
 
 @app.route("/htc/projects/<projectId>/task-retention-policy", methods=["PUT"])
 def endpoint_PUT__htc_projects_projectId_task_retention_policy(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 201:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -741,7 +741,7 @@ def endpoint_PUT__htc_projects_projectId_task_retention_policy(projectId):
 
 @app.route("/htc/projects/<projectId>/task-retention-policy", methods=["DELETE"])
 def endpoint_DELETE__htc_projects_projectId_task_retention_policy(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 204:
         return "", 204
     if target_status == 401:
@@ -752,7 +752,7 @@ def endpoint_DELETE__htc_projects_projectId_task_retention_policy(projectId):
 
 @app.route("/htc/projects/<projectId>/container-registry/images", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_container_registry_images(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "containerRegistry": "123456789.dkr.ecr.us-west-2.amazonaws.com/rescale/project-12345/",
@@ -770,7 +770,7 @@ def endpoint_GET__htc_projects_projectId_container_registry_images(projectId):
 
 @app.route("/htc/projects/<projectId>/container-registry/repo/<repoName>", methods=["POST"])
 def endpoint_POST__htc_projects_projectId_container_registry_repo_repoName_(projectId, repoName):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "repositoryName": "repo1",
@@ -788,7 +788,7 @@ def endpoint_POST__htc_projects_projectId_container_registry_repo_repoName_(proj
 
 @app.route("/htc/projects/<projectId>/container-registry/token", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_container_registry_token(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return ('registry-token-12345', 200 )
     if target_status == 401:
@@ -799,7 +799,7 @@ def endpoint_GET__htc_projects_projectId_container_registry_token(projectId):
 
 @app.route("/htc/projects/<projectId>/tasks", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -828,7 +828,7 @@ def endpoint_GET__htc_projects_projectId_tasks(projectId):
 
 @app.route("/htc/projects/<projectId>/tasks", methods=["POST"])
 def endpoint_POST__htc_projects_projectId_tasks(projectId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -852,7 +852,7 @@ def endpoint_POST__htc_projects_projectId_tasks(projectId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -876,7 +876,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_(projectId, taskId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>", methods=["DELETE"])
 def endpoint_DELETE__htc_projects_projectId_tasks_taskId_(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -900,7 +900,7 @@ def endpoint_DELETE__htc_projects_projectId_tasks_taskId_(projectId, taskId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>", methods=["PATCH"])
 def endpoint_PATCH__htc_projects_projectId_tasks_taskId_(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectId": "project-12345",
@@ -924,7 +924,7 @@ def endpoint_PATCH__htc_projects_projectId_tasks_taskId_(projectId, taskId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/group-summary-statistics", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_group_summary_statistics(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -951,7 +951,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_group_summary_statistics(p
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/groups", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_groups(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   "group1",
@@ -965,7 +965,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_groups(projectId, taskId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/storage/presigned-url", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_presigned_url(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "url": "https://presigned-put-url/my-storage",
@@ -981,7 +981,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_presigned_url(proj
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/storage/regional-storage", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_regional_storage(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "rescaleRegion": "AWS_AP_SOUTHEAST_1",
@@ -1007,7 +1007,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_regional_storage(p
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/storage/token", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_token(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectSharedStoragePath": "s3://my-storage/projects/project-12345/shared/",
@@ -1031,7 +1031,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_token(projectId, t
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/storage/token/<region>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_token_region_(projectId, taskId, region):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "projectSharedStoragePath": "s3://my-storage/projects/project-12345/shared/",
@@ -1055,7 +1055,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_token_region_(proj
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/storage/tokens", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_tokens(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "defaultRegion": "AWS_AP_SOUTHEAST_1",
@@ -1084,7 +1084,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_storage_tokens(projectId, 
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/summary-statistics", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_summary_statistics(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "group": "my-job-group",
@@ -1106,7 +1106,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_summary_statistics(project
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -1179,7 +1179,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs(projectId, taskId):
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs/batch", methods=["POST"])
 def endpoint_POST__htc_projects_projectId_tasks_taskId_jobs_batch(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   {
@@ -1245,7 +1245,7 @@ def endpoint_POST__htc_projects_projectId_tasks_taskId_jobs_batch(projectId, tas
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs/cancel", methods=["POST"])
 def endpoint_POST__htc_projects_projectId_tasks_taskId_jobs_cancel(projectId, taskId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return "", 200
     if target_status == 401:
@@ -1256,7 +1256,7 @@ def endpoint_POST__htc_projects_projectId_tasks_taskId_jobs_cancel(projectId, ta
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs/<jobId>", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_(projectId, taskId, jobId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "jobUUID": "155f18d4",
@@ -1324,7 +1324,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_(projectId, tas
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs/<jobId>/events", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_events(projectId, taskId, jobId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -1360,7 +1360,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_events(projectI
 
 @app.route("/htc/projects/<projectId>/tasks/<taskId>/jobs/<jobId>/logs", methods=["GET"])
 def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_logs(projectId, taskId, jobId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "items": [
@@ -1379,7 +1379,7 @@ def endpoint_GET__htc_projects_projectId_tasks_taskId_jobs_jobId_logs(projectId,
 
 @app.route("/htc/storage", methods=["GET"])
 def endpoint_GET__htc_storage():
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   {
@@ -1396,7 +1396,7 @@ def endpoint_GET__htc_storage():
 
 @app.route("/htc/storage/region/<region>", methods=["GET"])
 def endpoint_GET__htc_storage_region_region_(region):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "storageName": "my-storage",
@@ -1411,7 +1411,7 @@ def endpoint_GET__htc_storage_region_region_(region):
 
 @app.route("/htc/workspaces/<workspaceId>/dimensions", methods=["GET"])
 def endpoint_GET__htc_workspaces_workspaceId_dimensions(workspaceId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""[
   {
@@ -1435,7 +1435,7 @@ def endpoint_GET__htc_workspaces_workspaceId_dimensions(workspaceId):
 
 @app.route("/htc/workspaces/<workspaceId>/limits", methods=["GET"])
 def endpoint_GET__htc_workspaces_workspaceId_limits(workspaceId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "createdBy": "qWoUF",
@@ -1453,7 +1453,7 @@ def endpoint_GET__htc_workspaces_workspaceId_limits(workspaceId):
 
 @app.route("/htc/workspaces/<workspaceId>/task-retention-policy", methods=["GET"])
 def endpoint_GET__htc_workspaces_workspaceId_task_retention_policy(workspaceId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 200:
         return (jsonify(json.loads("""{
   "workspaceId": "workspace-12345",
@@ -1469,7 +1469,7 @@ def endpoint_GET__htc_workspaces_workspaceId_task_retention_policy(workspaceId):
 
 @app.route("/htc/workspaces/<workspaceId>/task-retention-policy", methods=["PUT"])
 def endpoint_PUT__htc_workspaces_workspaceId_task_retention_policy(workspaceId):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))
     if not target_status or target_status == 201:
         return (jsonify(json.loads("""{
   "workspaceId": "workspace-12345",

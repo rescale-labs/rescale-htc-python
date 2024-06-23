@@ -9,7 +9,7 @@ import logging
 import shutil
 import api_flask_mock
 
-# Unittest specific overrides, to be mocked into the rescalectrl module
+# Unittest specific overrides, to be mocked into the rescalehtc module
 TEST_CONFIG_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/tmp_configfolder/"
 TEST_BASE_URL = "http://127.0.0.1:5000"
 
@@ -18,8 +18,8 @@ import logging
 logging.basicConfig(level=logging.NOTSET)
 
 # Library under test
-import rescalectrl
-from rescalectrl import api, rprojects, rtasks, rjobs, container_registry
+import rescalehtc
+from rescalehtc import api, htcjobs, htcprojects, htctasks, container_registry
 
 class TestsHighlevel(unittest.TestCase):
 
@@ -40,14 +40,14 @@ class TestsHighlevel(unittest.TestCase):
             fp.write("mock-api-key==")
 
     def setUp(self):
-        if "RESCALECTRL_MOCK_TARGET_STATUS" in os.environ:
-            del os.environ["RESCALECTRL_MOCK_TARGET_STATUS"]
+        if "RESCALEHTC_MOCK_TARGET_STATUS" in os.environ:
+            del os.environ["RESCALEHTC_MOCK_TARGET_STATUS"]
         # Mock URL and config folder in authenticate module
-        with mock.patch.multiple("rescalectrl.rescale_session.RescaleSession",
+        with mock.patch.multiple("rescalehtc.htcsession.HtcSession",
                 get_rescale_api_base_url=lambda : TEST_BASE_URL,
                 get_config_folder=lambda _ : TEST_CONFIG_FOLDER,
             ):
-            self.rs = rescalectrl.rescale_session.RescaleSession()
+            self.rs = rescalehtc.htcsession.HtcSession()
         # Empty line to separate tests
         print()
 
@@ -57,43 +57,43 @@ class TestsHighlevel(unittest.TestCase):
     # Test listing projects
     def test_0001_list_projects(self):
 
-        projects = rescalectrl.rprojects.get_projects(self.rs)
+        projects = rescalehtc.htcprojects.get_projects(self.rs)
         assert(len(projects) > 0)
 
     # Test listing tasks
     def test_0002_list_tasks(self):
-        projects = rescalectrl.rprojects.get_projects(self.rs)
+        projects = rescalehtc.htcprojects.get_projects(self.rs)
         assert(len(projects) > 0)
         project = projects[0]
-        tasks = rescalectrl.rtasks.get_tasks(self.rs, project)
+        tasks = rescalehtc.htctasks.get_tasks(self.rs, project)
         assert(len(tasks) > 0)
 
     # Test listing jobs, and check types of all the returns
     def test_0003_list_jobs(self):
-        projects = rescalectrl.rprojects.get_projects(self.rs)
+        projects = rescalehtc.htcprojects.get_projects(self.rs)
         assert(len(projects) > 0)
-        assert(all(isinstance(project, rescalectrl.rprojects.RescaleProject) for project in projects))
+        assert(all(isinstance(project, rescalehtc.htcprojects.HtcProject) for project in projects))
         project = projects[0]
-        tasks = rescalectrl.rtasks.get_tasks(self.rs, project)
+        tasks = rescalehtc.htctasks.get_tasks(self.rs, project)
         assert(len(tasks) > 0)
-        assert(all(isinstance(task, rescalectrl.rtasks.RescaleTask) for task in tasks))
+        assert(all(isinstance(task, rescalehtc.htctasks.HtcTask) for task in tasks))
         task = tasks[0]
-        jobs = rescalectrl.rjobs.get_jobs(self.rs, task)
+        jobs = rescalehtc.htcjobs.get_jobs(self.rs, task)
         assert(len(jobs) > 0)
-        assert(all(isinstance(job, rescalectrl.rjobs.RescaleJob) for job in jobs))
+        assert(all(isinstance(job, rescalehtc.htcjobs.HtcJob) for job in jobs))
 
     def test_0010_basic_exception_handling(self):
-        os.environ["RESCALECTRL_MOCK_TARGET_STATUS"] = "403"
-        # If the API returns a 403 status, then expect a RescaleException with that exit code
+        os.environ["RESCALEHTC_MOCK_TARGET_STATUS"] = "403"
+        # If the API returns a 403 status, then expect a HtcException with that exit code
         try:
-            projects = rescalectrl.rprojects.get_projects(self.rs)
+            projects = rescalehtc.htcprojects.get_projects(self.rs)
             assert(False)
-        except rescalectrl.exceptions.RescaleException as e:
+        except rescalehtc.exceptions.HtcException as e:
             assert(e.status_code == 403)
 
     # Perform assorted operations on the container registry object
     def test_0050_container_registry_operations(self):
-        project = rescalectrl.rprojects.get_projects(self.rs)[0]
+        project = rescalehtc.htcprojects.get_projects(self.rs)[0]
         registry = container_registry.get_container_registry(self.rs, project)
         # TODO: Reenable this if the delete image endpoint is added back into the API
         #delete_result = registry.delete_image(self.rs, image_name="image-to-delete:latest")
@@ -105,21 +105,21 @@ class TestsHighlevel(unittest.TestCase):
         token = registry.get_token(self.rs)
 
     def test_0070_project_operations(self):
-        project = rescalectrl.rprojects.get_projects(self.rs)[0]
+        project = rescalehtc.htcprojects.get_projects(self.rs)[0]
         limits = project.get_limits(self.rs)
 
     def test_0070_task_operations(self):
-        project = rescalectrl.rprojects.get_projects(self.rs)[0]
-        task = rtasks.get_tasks(self.rs, project)[0]
+        project = rescalehtc.htcprojects.get_projects(self.rs)[0]
+        task = htctasks.get_tasks(self.rs, project)[0]
         task.get_task_summary(self.rs)
         assert(isinstance(task.is_still_running(self.rs), bool))
         task.cancel_jobs_in_task(self.rs)
         task.delete_task(self.rs)
 
     def test_0080_job_operations(self):
-        project = rescalectrl.rprojects.get_projects(self.rs)[0]
-        task = rtasks.get_tasks(self.rs, project)[0]
-        job = rjobs.get_job_with_id(self.rs, task, "1234567-89")
+        project = rescalehtc.htcprojects.get_projects(self.rs)[0]
+        task = htctasks.get_tasks(self.rs, project)[0]
+        job = htcjobs.get_job_with_id(self.rs, task, "1234567-89")
 
         # Try job updates etc
         assert(isinstance(job.is_still_running(self.rs), bool))
@@ -157,10 +157,10 @@ class TestsHighlevel(unittest.TestCase):
         os.remove(tmp_logfile)
 
     def test_0090_job_creation(self):
-        project = rescalectrl.rprojects.get_projects(self.rs)[0]
-        task = rtasks.get_tasks(self.rs, project)[0]
+        project = rescalehtc.htcprojects.get_projects(self.rs)[0]
+        task = htctasks.get_tasks(self.rs, project)[0]
 
-        job = rjobs.create_single_job(self.rs, task, "ON_DEMAND_ECONOMY", "my_image:latest", exec_timeout_seconds=10, region="AWS_US_EAST_2")
+        job = htcjobs.create_single_job(self.rs, task, "ON_DEMAND_ECONOMY", "my_image:latest", exec_timeout_seconds=10, region="AWS_US_EAST_2")
 
 
     def test_0200_jwt_tests(self):

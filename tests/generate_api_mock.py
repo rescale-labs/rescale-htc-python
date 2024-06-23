@@ -43,7 +43,7 @@ for endpoint in api_spec:
 
 @app.route("{parameterized_url}", methods=["{endpoint['method']}"])
 def {function_name}({", ".join(parameters)}):
-    target_status = int(os.environ.get('RESCALECTRL_MOCK_TARGET_STATUS', 0))"""
+    target_status = int(os.environ.get('RESCALEHTC_MOCK_TARGET_STATUS', 0))"""
 
     # If there are responses to this endpoint, add it
     if endpoint["responses"]:

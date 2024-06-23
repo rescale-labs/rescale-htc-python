@@ -1,6 +1,6 @@
 Container Registry and Images
-==================================
+=============================
 
-.. automodule:: rescalectrl.container_registry
+.. automodule:: rescalehtc.container_registry
    :members:
 

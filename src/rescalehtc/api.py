@@ -8,15 +8,15 @@ E.g. POST /htc/projects/{projectId}/tasks/{taskId}/jobs/batch
 Becomes: post_htc_projects_tasks_jobs_batch(...)
 
 API calls that result in a HTTP 400 or larger code, for example due
-to input error, will cause these functions to raise a RescaleException.
+to input error, will cause these functions to raise a HtcException.
 """
 
 from __future__ import annotations
 from typing import Optional
 
-from . import RescaleSession
+from . import HtcSession
 from .internals.rest_helpers import api_get, api_post, api_put, api_patch, api_delete
-from .exceptions import RescaleException
+from .exceptions import HtcException
 
 
 # *********************
@@ -24,7 +24,7 @@ from .exceptions import RescaleException
 # *********************
 
 
-def get_well_known_jwks(rescale: RescaleSession) -> dict:
+def get_well_known_jwks(rescale: HtcSession) -> dict:
     """
     Corresponds to API call:
 
@@ -36,15 +36,15 @@ def get_well_known_jwks(rescale: RescaleSession) -> dict:
     return api_get(rescale, f"{rescale.RESCALE_API_BASE_URL}/.well-known/jwks.json")
 
 
-def get_auth_token(rescale: RescaleSession, authorization_header: str) -> dict:
+def get_auth_token(rescale: HtcSession, authorization_header: str) -> dict:
     """
     Corresponds to API call:
 
     GET /auth/token
 
-    This endpoint should never be called, as the RescaleSession object
+    This endpoint should never be called, as the HtcSession object
     already contains a token to use.
-    Call :func:`rescalectrl.rescale_session.RescaleSession.get_bearer_token`
+    Call :func:`rescalehtc.htcsession.HtcSession.get_bearer_token`
     instead to get a valid Bearer token if you need one.
 
     This API call returns a rescale bearer token.
@@ -63,7 +63,7 @@ def get_auth_token(rescale: RescaleSession, authorization_header: str) -> dict:
     )
 
 
-def get_auth_token_whoami(rescale: RescaleSession) -> dict:
+def get_auth_token_whoami(rescale: HtcSession) -> dict:
     """
     Corresponds to API call:
 
@@ -76,15 +76,15 @@ def get_auth_token_whoami(rescale: RescaleSession) -> dict:
     return api_get(rescale, f"{rescale.RESCALE_API_BASE_URL}/auth/token/whoami")
 
 
-def get_auth_whoami(rescale: RescaleSession, authorization_header: str) -> dict:
+def get_auth_whoami(rescale: HtcSession, authorization_header: str) -> dict:
     """
     Corresponds to API call:
 
     GET /auth/whoami
 
     This API call returns Rescale "Who Am I" information about the user. When using
-    this library, prefer using :func:`rescalectrl.api.get_auth_token_whoami` instead,
-    which uses the more convenient Bearer token in RescaleSession, and typically
+    this library, prefer using :func:`rescalehtc.api.get_auth_token_whoami` instead,
+    which uses the more convenient Bearer token in HtcSession, and typically
     contains sufficient information.
 
     You must provide an API key to this function, as this endpoint requires that type of key.
@@ -100,7 +100,7 @@ def get_auth_whoami(rescale: RescaleSession, authorization_header: str) -> dict:
         custom_auth_header=authorization_header,
     )
 
-def post_oauth_token(rescale: RescaleSession) -> dict:
+def post_oauth_token(rescale: HtcSession) -> dict:
     """
     Corresponds to API call:
 
@@ -115,7 +115,7 @@ def post_oauth_token(rescale: RescaleSession) -> dict:
 # *********************
 
 
-def get_htc_gcp_clusters(rescale: RescaleSession, workspace_id: str) -> dict:
+def get_htc_gcp_clusters(rescale: HtcSession, workspace_id: str) -> dict:
     """
     Corresponds to API call:
 
@@ -128,7 +128,7 @@ def get_htc_gcp_clusters(rescale: RescaleSession, workspace_id: str) -> dict:
     )
 
 
-def get_htc_regions(rescale: RescaleSession, region: str = None) -> dict:
+def get_htc_regions(rescale: HtcSession, region: str = None) -> dict:
     """
     Corresponds to API call:
 
@@ -150,7 +150,7 @@ def get_htc_regions(rescale: RescaleSession, region: str = None) -> dict:
 # *********************
 
 
-def get_htc_metrics(rescale: RescaleSession) -> dict:
+def get_htc_metrics(rescale: HtcSession) -> dict:
     """
     THIS FUNCTION IS NOT IMPLEMENTED AND WILL RAISE AN EXCEPTION.
 
@@ -161,7 +161,7 @@ def get_htc_metrics(rescale: RescaleSession) -> dict:
     This API call is used for metrics, it's not a normal REST endpoint.
     This function raises an exception.
     """
-    raise RescaleException("/htc/metrics is not a valid endpoint for REST")
+    raise HtcException("/htc/metrics is not a valid endpoint for REST")
 
 
 # *********************
@@ -169,7 +169,7 @@ def get_htc_metrics(rescale: RescaleSession) -> dict:
 # *********************
 
 
-def get_htc_projects(rescale: RescaleSession, project_id: str = None) -> dict:
+def get_htc_projects(rescale: HtcSession, project_id: str = None) -> dict:
     """
     Corresponds to API call:
 
@@ -188,7 +188,7 @@ def get_htc_projects(rescale: RescaleSession, project_id: str = None) -> dict:
         )
 
 
-def post_htc_projects(rescale: RescaleSession, payload: dict) -> dict:
+def post_htc_projects(rescale: HtcSession, payload: dict) -> dict:
     """
     Corresponds to API call:
 
@@ -201,7 +201,7 @@ def post_htc_projects(rescale: RescaleSession, payload: dict) -> dict:
     )
 
 def get_htc_projects_dimensions(
-    rescale: RescaleSession, project_id: str) -> dict:
+    rescale: HtcSession, project_id: str) -> dict:
     """
     Corresponds to API call:
 
@@ -216,7 +216,7 @@ def get_htc_projects_dimensions(
 
 
 def put_htc_projects_dimensions(
-    rescale: RescaleSession, project_id: str, payload: dict) -> dict:
+    rescale: HtcSession, project_id: str, payload: dict) -> dict:
     """
     Corresponds to API call:
 
@@ -232,7 +232,7 @@ def put_htc_projects_dimensions(
 
 
 def get_htc_projects_limits(
-    rescale: RescaleSession, project_id: str, id: Optional[int] = None
+    rescale: HtcSession, project_id: str, id: Optional[int] = None
 ) -> dict:
     """
     Corresponds to API call:
@@ -255,7 +255,7 @@ def get_htc_projects_limits(
 
 
 def post_htc_projects_limits(
-    rescale: RescaleSession, project_id: str, payload: dict
+    rescale: HtcSession, project_id: str, payload: dict
 ) -> dict:
     """
     Corresponds to API call:
@@ -271,7 +271,7 @@ def post_htc_projects_limits(
     )
 
 
-def delete_htc_projects_limits(rescale: RescaleSession, project_id: str, id: Optional[int] = None) -> dict:
+def delete_htc_projects_limits(rescale: HtcSession, project_id: str, id: Optional[int] = None) -> dict:
     """
     Corresponds to API call:
 
@@ -294,7 +294,7 @@ def delete_htc_projects_limits(rescale: RescaleSession, project_id: str, id: Opt
 
 
 def patch_htc_projects_limits(
-    rescale: RescaleSession, project_id: str, id: int, payload: dict
+    rescale: HtcSession, project_id: str, id: int, payload: dict
 ) -> dict:
     """
     Corresponds to API call:
@@ -311,7 +311,7 @@ def patch_htc_projects_limits(
 
 
 def get_htc_projects_storage_presigned_url(
-    rescale: RescaleSession, project_id: str
+    rescale: HtcSession, project_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -327,7 +327,7 @@ def get_htc_projects_storage_presigned_url(
 
 
 def get_htc_projects_storage_token(
-    rescale: RescaleSession, project_id: str, region: str = None
+    rescale: HtcSession, project_id: str, region: str = None
 ) -> dict:
     """
     Corresponds to API call:
@@ -351,7 +351,7 @@ def get_htc_projects_storage_token(
         )
 
 
-def get_htc_projects_storage_tokens(rescale: RescaleSession, project_id: str) -> dict:
+def get_htc_projects_storage_tokens(rescale: HtcSession, project_id: str) -> dict:
     """
     Corresponds to API call:
 
@@ -366,7 +366,7 @@ def get_htc_projects_storage_tokens(rescale: RescaleSession, project_id: str) ->
     )
 
 
-def get_htc_projects_task_retention_policy(rescale: RescaleSession, project_id: str) -> dict:
+def get_htc_projects_task_retention_policy(rescale: HtcSession, project_id: str) -> dict:
     """
     Corresponds to API call:
 
@@ -388,7 +388,7 @@ def get_htc_projects_task_retention_policy(rescale: RescaleSession, project_id: 
     )
 
 
-def put_htc_projects_task_retention_policy(rescale: RescaleSession, project_id: str, payload: dict) -> dict:
+def put_htc_projects_task_retention_policy(rescale: HtcSession, project_id: str, payload: dict) -> dict:
     """
     Corresponds to API call:
 
@@ -403,7 +403,7 @@ def put_htc_projects_task_retention_policy(rescale: RescaleSession, project_id: 
     )
 
 
-def delete_htc_projects_task_retention_policy(rescale: RescaleSession, project_id: str) -> dict:
+def delete_htc_projects_task_retention_policy(rescale: HtcSession, project_id: str) -> dict:
     """
     Corresponds to API call:
 
@@ -424,7 +424,7 @@ def delete_htc_projects_task_retention_policy(rescale: RescaleSession, project_i
 
 
 def get_htc_projects_container_registry_images(
-    rescale: RescaleSession, project_id: str, image_name: str = None
+    rescale: HtcSession, project_id: str, image_name: str = None
 ) -> dict:
     """
     Corresponds to API call:
@@ -449,7 +449,7 @@ def get_htc_projects_container_registry_images(
 
 
 def post_htc_projects_container_registry_repo(
-    rescale: RescaleSession, project_id: str, repo_name: str
+    rescale: HtcSession, project_id: str, repo_name: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -468,7 +468,7 @@ def post_htc_projects_container_registry_repo(
 
 
 def get_htc_projects_container_registry_token(
-    rescale: RescaleSession, project_id: str
+    rescale: HtcSession, project_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -491,7 +491,7 @@ def get_htc_projects_container_registry_token(
 
 
 def get_htc_projects_tasks(
-    rescale: RescaleSession, project_id: str, task_id: str = None
+    rescale: HtcSession, project_id: str, task_id: str = None
 ) -> dict:
     """
     Corresponds to API call:
@@ -515,7 +515,7 @@ def get_htc_projects_tasks(
 
 
 def post_htc_projects_tasks(
-    rescale: RescaleSession, project_id: str, payload: dict
+    rescale: HtcSession, project_id: str, payload: dict
 ) -> dict:
     """
     Corresponds to API Call:
@@ -534,7 +534,7 @@ def post_htc_projects_tasks(
 
 
 def delete_htc_projects_tasks(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API Call:
@@ -552,7 +552,7 @@ def delete_htc_projects_tasks(
 
 
 def patch_htc_projects_tasks(
-    rescale: RescaleSession, project_id: str, task_id: str, payload: dict
+    rescale: HtcSession, project_id: str, task_id: str, payload: dict
 ) -> dict:
     """
     Corresponds to API Call:
@@ -568,7 +568,7 @@ def patch_htc_projects_tasks(
     )
 
 def get_htc_projects_tasks_group_summary_statistics(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -584,7 +584,7 @@ def get_htc_projects_tasks_group_summary_statistics(
 
 
 def get_htc_projects_tasks_groups(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -600,7 +600,7 @@ def get_htc_projects_tasks_groups(
 
 
 def get_htc_projects_tasks_storage_presigned_url(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -616,7 +616,7 @@ def get_htc_projects_tasks_storage_presigned_url(
 
 
 def get_htc_projects_tasks_storage_regional_storage(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -632,7 +632,7 @@ def get_htc_projects_tasks_storage_regional_storage(
 
 
 def get_htc_projects_tasks_storage_token(
-    rescale: RescaleSession, project_id: str, task_id: str, region: str = None
+    rescale: HtcSession, project_id: str, task_id: str, region: str = None
 ) -> dict:
     """
     Corresponds to API call:
@@ -657,7 +657,7 @@ def get_htc_projects_tasks_storage_token(
 
 
 def get_htc_projects_tasks_storage_tokens(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -674,7 +674,7 @@ def get_htc_projects_tasks_storage_tokens(
 
 
 def get_htc_projects_tasks_summary_statistics(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API call:
@@ -695,7 +695,7 @@ def get_htc_projects_tasks_summary_statistics(
 
 
 def get_htc_projects_tasks_jobs(
-    rescale: RescaleSession, project_id: str, task_id: str, job_id: str = None
+    rescale: HtcSession, project_id: str, task_id: str, job_id: str = None
 ) -> dict:
     """
     Corresponds to API Call:
@@ -720,7 +720,7 @@ def get_htc_projects_tasks_jobs(
 
 
 def post_htc_projects_tasks_jobs_batch(
-    rescale: RescaleSession, project_id: str, task_id: str, payload: dict
+    rescale: HtcSession, project_id: str, task_id: str, payload: dict
 ) -> dict:
     """
     Corresponds to API Call:
@@ -738,7 +738,7 @@ def post_htc_projects_tasks_jobs_batch(
 
 
 def post_htc_projects_tasks_jobs_cancel(
-    rescale: RescaleSession, project_id: str, task_id: str
+    rescale: HtcSession, project_id: str, task_id: str
 ) -> dict:
     """
     Corresponds to API Call:
@@ -757,7 +757,7 @@ def post_htc_projects_tasks_jobs_cancel(
 
 
 def get_htc_projects_tasks_jobs_logs(
-    rescale: RescaleSession, project_id: str, task_id: str, job_id: str, max_items : Optional[int] = None, page_size: int = 5000,
+    rescale: HtcSession, project_id: str, task_id: str, job_id: str, max_items : Optional[int] = None, page_size: int = 5000,
 ) -> dict:
     """
     Corresponds to API Call:
@@ -775,7 +775,7 @@ def get_htc_projects_tasks_jobs_logs(
 
 
 def get_htc_projects_tasks_jobs_events(
-    rescale: RescaleSession, project_id: str, task_id: str, job_id: str
+    rescale: HtcSession, project_id: str, task_id: str, job_id: str
 ) -> dict:
     """
     Corresponds to API Call:
@@ -795,7 +795,7 @@ def get_htc_projects_tasks_jobs_events(
 # *********************
 
 
-def get_htc_storage(rescale: RescaleSession) -> dict:
+def get_htc_storage(rescale: HtcSession) -> dict:
     """
     Corresponds to API Call:
 
@@ -809,7 +809,7 @@ def get_htc_storage(rescale: RescaleSession) -> dict:
     )
 
 
-def get_htc_storage_region(rescale: RescaleSession, region: str) -> dict:
+def get_htc_storage_region(rescale: HtcSession, region: str) -> dict:
     """
     Corresponds to API Call:
 
@@ -827,7 +827,7 @@ def get_htc_storage_region(rescale: RescaleSession, region: str) -> dict:
 # Workspace Resource
 # *********************
 
-def get_htc_workspaces_dimensions(rescale: RescaleSession, workspace_id: str) -> dict:
+def get_htc_workspaces_dimensions(rescale: HtcSession, workspace_id: str) -> dict:
     """
     Corresponds to API Call:
 
@@ -841,7 +841,7 @@ def get_htc_workspaces_dimensions(rescale: RescaleSession, workspace_id: str) ->
     )
 
 
-def get_htc_workspaces_limits(rescale: RescaleSession, workspace_id: str) -> dict:
+def get_htc_workspaces_limits(rescale: HtcSession, workspace_id: str) -> dict:
     """
     Corresponds to API Call:
 
@@ -855,7 +855,7 @@ def get_htc_workspaces_limits(rescale: RescaleSession, workspace_id: str) -> dic
     )
 
 
-def get_htc_task_retention_policy(rescale: RescaleSession, workspace_id: str) -> dict:
+def get_htc_task_retention_policy(rescale: HtcSession, workspace_id: str) -> dict:
     """
     Corresponds to API Call:
 
@@ -874,7 +874,7 @@ def get_htc_task_retention_policy(rescale: RescaleSession, workspace_id: str) ->
         f"{rescale.RESCALE_API_BASE_URL}/htc/workspaces/{workspace_id}/task-retention-policy",
     )
 
-def put_htc_task_retention_policy(rescale: RescaleSession, workspace_id: str, payload: dict) -> dict:
+def put_htc_task_retention_policy(rescale: HtcSession, workspace_id: str, payload: dict) -> dict:
     """
     Corresponds to API Call:
 
