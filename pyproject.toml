@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rescalehtc"
+version = "3.0.0"
+authors = [
+  { name="Christian Grovdal", email="christian.grovdal@arm.com" },
+  { name="Eivind Holsen", email="eivind.holsen@arm.com" },
+]
+description = " Rescale Control Helpers Package"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  'requests >= 2',
+]
+
+[project.scripts]
+rauthenticate = "rescalehtc.scripts.rauthenticate:argmain"
+
+[project.optional-dependencies]
+dev = [
+  'black',
+  'mock',
+  'flask',
+  'sphinx',
+  'sphinx_pyproject',
+  'sphinx_rtd_theme',
+  'selenium',
+  'beautifulsoup4',
+  'Pygments'
+]
+
+[project.urls]
+"Homepage" = "https://rescale.com/platform/hpc-as-a-service/high-throughput-computing/"
+"Bug Tracker" = "https://github.com/rescale-labs/rescale-htc-python/issues"
