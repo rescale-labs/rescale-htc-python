@@ -1,0 +1,6 @@
+# Python dependencies for rendering the documentation only
+# Should match what is in pyproject.toml at the root.
+
+sphinx
+sphinx_pyproject
+sphinx_rtd_theme
