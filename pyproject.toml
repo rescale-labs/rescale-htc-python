@@ -40,5 +40,5 @@ dev = [
 
 [project.urls]
 "Homepage" = "https://rescale.com/platform/hpc-as-a-service/high-throughput-computing/"
-"Documentation" = "https://rescale-htc-python.readthedocs.io/",
+"Documentation" = "https://rescale-htc-python.readthedocs.io/"
 "Bug Tracker" = "https://github.com/rescale-labs/rescale-htc-python/issues"
