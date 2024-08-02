@@ -17,7 +17,7 @@ class HtcSession:
 
     Before instancing this class for the first time in a non-rescale environment
     such as your own machine or a VM, use the ``rauthenticate`` executable script
-    that comes bundled with rescalehtc. This writes tokens to ``~/.rescalehtc/`` for later use.
+    that comes bundled with rescalehtc. This writes tokens to ``~/.config/rescalehtc/`` for later use.
 
     In an interactive environment, do:
 
@@ -36,7 +36,7 @@ class HtcSession:
 
     def __init__(self, workspace="default", config_folder_override=None):
         """
-        :param workspace: Optional: If you are working with multiple workspaces (which each has their own API key), then specify the workspace name here. This is required if you have more than 1 API key in ~/.rescalehtc/.
+        :param workspace: Optional: If you are working with multiple workspaces (which each has their own API key), then specify the workspace name here. This is required if you have more than 1 API key in ~/.config/rescalehtc/.
         :param config_folder_override: Optional: Override the default configuration folder, which by default is ~/.config/.rescalehtc/.
         """
 
