@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rescalehtc"
-version = "1.0.1"
+version = "1.0.2"
 authors = [
   { name="Christian Grovdal", email="christian.grovdal@arm.com" },
   { name="Eivind Holsen", email="eivind.holsen@arm.com" },
