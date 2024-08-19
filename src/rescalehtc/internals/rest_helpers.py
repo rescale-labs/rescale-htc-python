@@ -39,17 +39,19 @@ def api_get(rescale, endpoint, params={}, max_items=None, custom_auth_header=Non
                 remaining_max_items -= params["pageSize"]
 
         connections_semaphore.acquire()
-        last_res = rescale.requests_session.get(
-            endpoint,
-            headers={
-                "Authorization":
-                    custom_auth_header if custom_auth_header
-                    else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
-            },
-            params=params,
-            timeout=REQUESTS_TIMEOUTS,
-        )
-        connections_semaphore.release()
+        try:
+            last_res = rescale.requests_session.get(
+                endpoint,
+                headers={
+                    "Authorization":
+                        custom_auth_header if custom_auth_header
+                        else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
+                },
+                params=params,
+                timeout=REQUESTS_TIMEOUTS,
+            )
+        finally:
+            connections_semaphore.release()
 
         # Handle errors
         if last_res.status_code >= 400:
@@ -110,18 +112,20 @@ def api_post(
 ):
     rescale.reauthenticate_if_needed()
     connections_semaphore.acquire()
-    res = rescale.requests_session.post(
-        endpoint,
-        headers={
-            "Authorization":
-                custom_auth_header if custom_auth_header
-                else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
-        },
-        json=payload,
-        params=params,
-        timeout=REQUESTS_TIMEOUTS,
-    )
-    connections_semaphore.release()
+    try:
+        res = rescale.requests_session.post(
+            endpoint,
+            headers={
+                "Authorization":
+                    custom_auth_header if custom_auth_header
+                    else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
+            },
+            json=payload,
+            params=params,
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    finally:
+        connections_semaphore.release()
     return format_api_result(res, return_json, endpoint)
 
 # Wrapper for authenticated PUT operation
@@ -130,18 +134,20 @@ def api_put(
 ):
     rescale.reauthenticate_if_needed()
     connections_semaphore.acquire()
-    res = rescale.requests_session.put(
-        endpoint,
-        headers={
-            "Authorization":
-                custom_auth_header if custom_auth_header
-                else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
-        },
-        json=payload,
-        params=params,
-        timeout=REQUESTS_TIMEOUTS,
-    )
-    connections_semaphore.release()
+    try:
+        res = rescale.requests_session.put(
+            endpoint,
+            headers={
+                "Authorization":
+                    custom_auth_header if custom_auth_header
+                    else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
+            },
+            json=payload,
+            params=params,
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    finally:
+        connections_semaphore.release()
     return format_api_result(res, return_json, endpoint)
 
 # Wrapper for authenticated PATCH operation
@@ -150,18 +156,20 @@ def api_patch(
 ):
     rescale.reauthenticate_if_needed()
     connections_semaphore.acquire()
-    res = rescale.requests_session.patch(
-        endpoint,
-        headers={
-            "Authorization":
-                custom_auth_header if custom_auth_header
-                else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
-        },
-        json=payload,
-        params=params,
-        timeout=REQUESTS_TIMEOUTS,
-    )
-    connections_semaphore.release()
+    try:
+        res = rescale.requests_session.patch(
+            endpoint,
+            headers={
+                "Authorization":
+                    custom_auth_header if custom_auth_header
+                    else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
+            },
+            json=payload,
+            params=params,
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    finally:
+        connections_semaphore.release()
     return format_api_result(res, return_json, endpoint)
 
 
@@ -169,15 +177,17 @@ def api_patch(
 def api_delete(rescale, endpoint, params={}, custom_auth_header=None, return_json=True):
     rescale.reauthenticate_if_needed()
     connections_semaphore.acquire()
-    res = rescale.requests_session.delete(
-        endpoint,
-        headers={
-            "Authorization":
-                custom_auth_header if custom_auth_header
-                else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
-        },
-        params=params,
-        timeout=REQUESTS_TIMEOUTS,
-    )
-    connections_semaphore.release()
+    try:
+        res = rescale.requests_session.delete(
+            endpoint,
+            headers={
+                "Authorization":
+                    custom_auth_header if custom_auth_header
+                    else f"Bearer {rescale.RESCALE_HTC_BEARER_TOKEN}"
+            },
+            params=params,
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    finally:
+        connections_semaphore.release()
     return format_api_result(res, return_json, endpoint)
