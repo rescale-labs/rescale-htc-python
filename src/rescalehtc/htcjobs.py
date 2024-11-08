@@ -611,7 +611,7 @@ def create_job_batch(
         )
 
     for env in envs:
-        if not isinstance(env, dict) or set(env.keys()) != set(["name, value"]):
+        if not isinstance(env, dict) or set(env.keys()) != set(["name", "value"]):
             raise HtcException(
                 f"During job creation, the envs argument is not formatted as a list of dicts. "
                 'Expected list of dicts: [{"name": "MY_ENV_VAR", "value": "value_of_my_env_var"},..],  '
