@@ -1,0 +1,86 @@
+name: Build-Test-Publish rescale-htc-python
+run-name: ${{ github.actor }} is publishing rescale-htc-python
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Extract tag
+      run: |
+        TAG=${{ github.ref }}
+        echo "VERSION=${TAG##*/v}" >> "$GITHUB_ENV"
+
+    - name: Extract release notes
+      id: extract_notes
+      run: |
+        awk -v ver=${{ env.VERSION }} '
+        /^## Version / { if (p) { exit }; if ($3 == ver) { p=1; next } } p
+        ' CHANGELOG.md | sed 's/*/\\*/g' > release_notes.md
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install ".[dev]"
+
+    - name: Run tests
+      run: |
+        python -m unittest
+
+    - name: Build package
+      run: |
+        pip install build
+        python -m build --wheel
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset Wheel
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/*.whl
+        asset_name: rescalehtc-${{ env.VERSION }}-py3-none-any.whl
+        asset_content_type: application/octet-stream
+
+    - name: Upload Release Asset Tgz
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/*.tar.gz
+        asset_name: rescalehtc-${{ env.VERSION }}.tar.gz
+        asset_content_type: application/octet-stream
+  
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python -m pip install --upgrade twine
+        twine upload -r testpypi dist/*
