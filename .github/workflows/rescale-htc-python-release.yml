@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Extract tag
       run: |
@@ -27,7 +27,7 @@ jobs:
         ' CHANGELOG.md | sed 's/*/\\*/g' > release_notes.md
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: '3.7'
 
@@ -78,9 +78,15 @@ jobs:
         asset_content_type: application/octet-stream
   
     - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python -m pip install --upgrade twine
+        cat <<EOF > $HOME/.pypirc
+        [pypi]
+        username = __token__
+        password = ${{ secrets.PYPI_TOKEN }}
+
+        [testpypi]
+        username = __token__
+        password = ${{ secrets.TEST_PYPI_TOKEN }}
+        EOF
+        pip install --upgrade twine
         twine upload -r testpypi dist/*
