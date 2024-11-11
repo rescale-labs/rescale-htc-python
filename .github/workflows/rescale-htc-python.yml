@@ -43,7 +43,7 @@ jobs:
     - name: Build package
       run: |
         pip install build
-        python -m build --wheel
+        python -m build
 
     - name: Create Release
       id: create_release
@@ -63,7 +63,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/*.whl
+        asset_path: dist/rescalehtc-${{ env.VERSION }}-py3-none-any.whl
         asset_name: rescalehtc-${{ env.VERSION }}-py3-none-any.whl
         asset_content_type: application/octet-stream
 
@@ -73,7 +73,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/*.tar.gz
+        asset_path: dist/rescalehtc-${{ env.VERSION }}.tar.gz
         asset_name: rescalehtc-${{ env.VERSION }}.tar.gz
         asset_content_type: application/octet-stream
   
