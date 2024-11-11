@@ -89,4 +89,4 @@ jobs:
         password = ${{ secrets.TEST_PYPI_TOKEN }}
         EOF
         pip install --upgrade twine
-        twine upload -r testpypi dist/*
+        twine upload dist/*
