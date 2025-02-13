@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import requests
 from .bearer_token import BearerToken
@@ -32,12 +33,15 @@ class HtcSession:
     This will look for environment variables with either a ``RESCALE_HTC_REFRESH_TOKEN``
     or ``RESCALE_API_TOKEN``, which will be used to obtain the Bearer token used for
     later operations.
+
+    Alternatively, you can pass the API key directly to the HtcSession initializer.
     """
 
-    def __init__(self, workspace="default", config_folder_override=None):
+    def __init__(self, workspace: str = "default", config_folder_override: Optional[str] = None, api_key: Optional[str] = None):
         """
         :param workspace: Optional: If you are working with multiple workspaces (which each has their own API key), then specify the workspace name here. This is required if you have more than 1 API key in ~/.config/rescalehtc/.
         :param config_folder_override: Optional: Override the default configuration folder, which by default is ~/.config/.rescalehtc/.
+        :param api_key: Optional; str: If you want to authenticate with an API key directly, you can provide it here. If specified, the workspace and config_folder_override arguments will be ignored.
         """
 
         self.workspace = workspace
@@ -48,14 +52,19 @@ class HtcSession:
 
         # Use a shared requests session
         self.requests_session = requests.Session()
-
+        self.api_key = api_key
         self.do_authenticate()
 
     # Perform authentication and set member variables
     def do_authenticate(self):
-        self.bearer_json = authenticate.get_bearer_json(
-            self.requests_session, self.workspace, self.CONFIG_FOLDER, self.RESCALE_API_BASE_URL
-        )
+        if self.api_key is not None:
+            self.bearer_json = authenticate.request_new_bearer_token(
+                self.requests_session, self.api_key, self.RESCALE_API_BASE_URL
+            )
+        else:
+            self.bearer_json = authenticate.get_bearer_json(
+                self.requests_session, self.workspace, self.CONFIG_FOLDER, self.RESCALE_API_BASE_URL
+            )
         self.bearer_expiry = datetime.fromisoformat(self.bearer_json["expiresAt"])
         self.RESCALE_HTC_BEARER_TOKEN = self.bearer_json["tokenValue"]
 
