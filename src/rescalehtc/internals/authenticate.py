@@ -2,6 +2,7 @@ from __future__ import annotations
 import os
 import json
 import datetime
+from typing import Optional
 import requests
 import random
 import threading
@@ -77,40 +78,10 @@ def get_bearer_json(
                 logger.debug(f"Reused existing bearer token from {bearer_token_file}")
 
     if request_new_token:
-        # Get a new bearer token
-        if "RESCALE_HTC_REFRESH_TOKEN" in os.environ:
-            logger.debug(
-                "Requesting bearer token from Rescale API, using RESCALE_HTC_REFRESH_TOKEN token"
-            )
-            bearer_token_res = requests_session.get(
-                f"{rescale_api_base_url}/auth/token",
-                headers={
-                    "Authorization": f"Refresh {os.environ['RESCALE_HTC_REFRESH_TOKEN']}"
-                },
-                timeout=REQUESTS_TIMEOUTS,
-            )
-        else:
-            logger.debug("Requesting bearer token from Rescale API, using API token")
-            bearer_token_res = requests_session.get(
-                f"{rescale_api_base_url}/auth/token",
-                headers={"Authorization": f"Token {RESCALE_API_TOKEN}"},
-                timeout=REQUESTS_TIMEOUTS,
-            )
 
-        if bearer_token_res.status_code >= 400:
-            msg = f"""Failed to authenticate to Rescale, check your API key.
-            {bearer_token_res.text}
-            "HTTP {bearer_token_res.status_code}"""
-            logger.error(msg)
-            raise HtcException(msg)
-
-        bearer_json = bearer_token_res.json()
-
-        expires_at = datetime.datetime.now() + datetime.timedelta(
-            seconds=bearer_json["expiresIn"]
+        bearer_json = request_new_bearer_token(
+            requests_session, RESCALE_API_TOKEN, rescale_api_base_url
         )
-        bearer_json["expiresAt"] = expires_at.isoformat()
-
         # Aquire a semaphore to make this thread safe
         semaphore.acquire()
         logger.debug(f"Writing new bearer token to file {bearer_token_file}")
@@ -120,5 +91,51 @@ def get_bearer_json(
         semaphore.release()
 
     logger.debug("Authenticated OK.")
+
+    return bearer_json
+
+
+def request_new_bearer_token(
+    requests_session: requests.Session,
+    rescale_api_token: Optional[str],
+    rescale_api_base_url: str,
+):
+    # Get a new bearer token
+    if "RESCALE_HTC_REFRESH_TOKEN" in os.environ:
+        logger.debug(
+            "Requesting bearer token from Rescale API, using RESCALE_HTC_REFRESH_TOKEN token"
+        )
+        bearer_token_res = requests_session.get(
+            f"{rescale_api_base_url}/auth/token",
+            headers={
+                "Authorization": f"Refresh {os.environ['RESCALE_HTC_REFRESH_TOKEN']}"
+            },
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    elif rescale_api_token is not None:
+        logger.debug("Requesting bearer token from Rescale API, using API token")
+        bearer_token_res = requests_session.get(
+            f"{rescale_api_base_url}/auth/token",
+            headers={"Authorization": f"Token {rescale_api_token}"},
+            timeout=REQUESTS_TIMEOUTS,
+        )
+    else:
+        msg = "No API token or refresh token available to authenticate with Rescale API."
+        logger.error(msg)
+        raise HtcException(msg)
+
+    if bearer_token_res.status_code >= 400:
+        msg = f"""Failed to authenticate to Rescale, check your API key.
+        {bearer_token_res.text}
+        "HTTP {bearer_token_res.status_code}"""
+        logger.error(msg)
+        raise HtcException(msg)
+
+    bearer_json = bearer_token_res.json()
+
+    expires_at = datetime.datetime.now() + datetime.timedelta(
+        seconds=bearer_json["expiresIn"]
+    )
+    bearer_json["expiresAt"] = expires_at.isoformat()
 
     return bearer_json

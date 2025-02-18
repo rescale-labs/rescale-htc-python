@@ -19,6 +19,7 @@ logging.basicConfig(level=logging.NOTSET)
 
 # Library under test
 import rescalehtc
+import rescalehtc.internals.authenticate
 from rescalehtc import api, htcjobs, htcprojects, htctasks, container_registry
 
 class TestsHighlevel(unittest.TestCase):
@@ -180,6 +181,20 @@ class TestsHighlevel(unittest.TestCase):
         # Restore the rs object
         self.rs.bearer_json["tokenValue"] = original_rs
         self.rs.RESCALE_HTC_BEARER_TOKEN = original_rs
+
+    def test_0201_jwt_request_with_api_key(self):
+        # The JWT token is requested with an API key that is passed
+        # directly to the HtcSession object
+        with mock.patch.multiple("rescalehtc.htcsession.HtcSession",
+            get_rescale_api_base_url=lambda : TEST_BASE_URL,
+            get_config_folder=lambda _ : TEST_CONFIG_FOLDER):
+            auth_spy = mock.MagicMock(wraps=rescalehtc.internals.authenticate)
+            with mock.patch("rescalehtc.htcsession.authenticate", new=auth_spy):
+                session = rescalehtc.htcsession.HtcSession(api_key='mock-api-key==')
+                assert session.RESCALE_HTC_BEARER_TOKEN is not None
+                assert session.bearer_expiry is not None
+                assert auth_spy.get_bearer_json.called is False
+                assert auth_spy.request_new_bearer_token.called is True
 
     # Test the various endpoints in Token Resource
     def test_0500_token_resource_tests(self):
